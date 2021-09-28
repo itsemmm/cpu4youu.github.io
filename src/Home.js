@@ -208,6 +208,7 @@ const Home = ({ ual }) => {
   const [currentLoanedWax, setCurrentLoanedWax] = useState();
   const [multiDayFee, setMultiDayFee] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
+  const [updateTime, setUpdateTime] = useState();
 
 
 
@@ -303,26 +304,45 @@ const getConfig = async () => {
     if (amountToSend && amountToSend > 0) {
 
       // CALL CONTRACT / DO CALCULATION
-      updateCost();
-    } else {
-      setAmountToBeStaked(0);
-    }
-  }, [amountToSend]);
-
-
-
-  useEffect(() => {
-    const interval = setInterval(() => {
+      // updateCost();
       const run = async () => {
         await getConfig();
       };
 
       run();
+    } else {
+      setAmountToBeStaked(0);
+    }
+  }, [amountToSend,updateTime]);
 
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUpdateTime(Date.now());
     }, 5000);
     return () => clearInterval(interval);
-  }, [getConfig]);
+  }, []);
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+      // const run = async () => {
+      //   await getConfig();
+      // };
+
+      // run();
+
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, [getConfig]);
+
+
+
+// useEffect(() => {
+//     const interval = setInterval(async () => {
+//         await getConfig();
+//     }, 5000);
+//     return () => clearInterval(interval);
+//   }, [getConfig]);
 
 
 
@@ -359,7 +379,8 @@ const getConfig = async () => {
   const renderNameAndBalance = () => {
     return ual.activeUser && account ? (
       <div>
-        {ual.activeUser.accountName} {account.core_liquid_balance}
+        {ual.activeUser.accountName} <br />
+        Current Balance: {account.core_liquid_balance}
         <br />
       </div>
     ) : null;
@@ -368,7 +389,7 @@ const getConfig = async () => {
   const depositedWax = () => {
     return ual.activeUser && account ? (
       <div>
-        {currentBalance}
+        Deposited: {currentBalance}
         <br />
       </div>
     ) : null;
