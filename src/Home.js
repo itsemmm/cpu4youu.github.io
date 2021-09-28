@@ -113,16 +113,88 @@ const Home = ({ ual }) => {
     }
   };
 
+  const transactionUpdateBalance = async () => {
+    const actions = {
+      actions: [
+        {
+          account: "cpu4",
+          name: "updateBalance",
+          data: {
+            username: ual.activeUser.accountName,
+          },
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: "active",
+            },
+          ],
+        },
+      ],
+    };
+    try {
+    const r = await ual.activeUser.signTransaction(actions, {
+      blocksBehind: 5,
+      expireSeconds: 300,
+      broadcast: true,
+      sign: true,
+    })
+    console.log(r);
+    } catch (e) {
+        console.error(e);
+        // process.exit();
+        console.log(JSON.stringify(e));
+    }
+  };
+
+  const transactionWithdraw = async () => {
+    const actions = {
+      actions: [
+        {
+          account: "cpu4",
+          name: "withdraw",
+          data: {
+            username: ual.activeUser.accountName,
+            amount: amountToSend + " WAX",
+          },
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: "active",
+            },
+          ],
+        },
+      ],
+    };
+    try {
+    const r = await ual.activeUser.signTransaction(actions, {
+      blocksBehind: 5,
+      expireSeconds: 300,
+      broadcast: true,
+      sign: true,
+    })
+    console.log(r);
+    } catch (e) {
+        console.error(e);
+        // process.exit();
+        console.log(JSON.stringify(e));
+    }
+  };
+
   const SEND_OPTIONS = {
     self: "Request Self Stake",
     other: "Stake To User",
     deposit: "Deposit And Earn",
+    update: "Update Balance",
+    withdraw: "Withdraw",
   };
 
   const TRANSACTIONS = {
     [SEND_OPTIONS.self]: transactionStakeToSelf,
     [SEND_OPTIONS.other]: transactionStakeToUser,
     [SEND_OPTIONS.deposit]: transactionDeposit,
+    [SEND_OPTIONS.update]: transactionUpdateBalance,
+    [SEND_OPTIONS.withdraw]: transactionWithdraw,
+
   };
 
   const [account, setAccount] = useState();
@@ -313,6 +385,8 @@ const getConfig = async () => {
           <option value={SEND_OPTIONS.self}>{SEND_OPTIONS.self}</option>
           <option value={SEND_OPTIONS.other}>{SEND_OPTIONS.other}</option>
           <option value={SEND_OPTIONS.deposit}>{SEND_OPTIONS.deposit}</option>
+          <option value={SEND_OPTIONS.update}>{SEND_OPTIONS.update}</option>
+          <option value={SEND_OPTIONS.withdraw}>{SEND_OPTIONS.withdraw}</option>
         </select>
         <br />
         <br />
@@ -369,6 +443,30 @@ const getConfig = async () => {
           <tbody>{renderAmountToSendInput()}</tbody>
         </table>
       );
+    } else if (sendOption === SEND_OPTIONS.update) {
+      return (
+        <table
+          style={{
+            margin: "auto",
+            borderSpacing: "12px 12px",
+            textAlign: "left",
+          }}
+        >
+          <tbody>{renderUpdateBalance()}</tbody>
+        </table>
+      );
+    } else if (sendOption === SEND_OPTIONS.withdraw) {
+      return (
+        <table
+          style={{
+            margin: "auto",
+            borderSpacing: "12px 12px",
+            textAlign: "left",
+          }}
+        >
+          <tbody>{renderWithdraw()}</tbody>
+        </table>
+      );
     }
   };
 
@@ -421,6 +519,30 @@ const getConfig = async () => {
     return (
       <tr>
         <td style={{ textAlign: "right" }}>Amount to send</td>
+        <td>
+          <input
+            style={{ width: "60px" }}
+            type="number"
+            value={amountToSend}
+            onChange={(e) => setAmountToSend(e.target.value)}
+          />{" "}
+          WAX
+        </td>
+      </tr>
+    );
+  };
+
+  const renderUpdateBalance = () => {
+    return (
+      <tr>
+      </tr>
+    );
+  };
+
+  const renderWithdraw = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Amount to withdraw</td>
         <td>
           <input
             style={{ width: "60px" }}
