@@ -1,42 +1,128 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { JsonRpc } from "eosjs";
 
-const rpc = new JsonRpc("https://api.wax.alohaeos.com", { fetch });
+// const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
+const rpc = new JsonRpc("https://testnet.wax.eosdetroit.io", { fetch });
 
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
     const actions = {
       actions: [
         {
-          account: "s.rplanet",
-          name: "claim",
+          account: "eosio.token",
+          name: "transfer",
+          data: {
+            from: ual.activeUser.accountName,
+            to: "cpu4",
+            quantity: amountToSend + " WAX",
+            memo: numberOfDaysOption + "",
+          },
           authorization: [
             {
               actor: ual.activeUser.accountName,
               permission: "active",
             },
           ],
-          data: {
-            to: ual.activeUser.accountName,
-          },
         },
       ],
     };
-
+    try {
     const r = await ual.activeUser.signTransaction(actions, {
+      blocksBehind: 5,
+      expireSeconds: 300,
       broadcast: true,
-    });
+      sign: true,
+    })
     console.log(r);
+    } catch (e) {
+        console.error(e);
+        // process.exit();
+        console.log(JSON.stringify(e));
+    }
+  };
+
+  const transactionStakeToUser = async () => {
+    const actions = {
+      actions: [
+        {
+          account: "eosio.token",
+          name: "transfer",
+          data: {
+            from: ual.activeUser.accountName,
+            to: "cpu4",
+            quantity: amountToSend + " WAX",
+            memo: "USER:" + accountToStake + "," + numberOfDaysOption,
+          },
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: "active",
+            },
+          ],
+        },
+      ],
+    };
+    try {
+    const r = await ual.activeUser.signTransaction(actions, {
+      blocksBehind: 5,
+        expireSeconds: 300,
+        broadcast: true,
+        sign: true,
+    })
+    console.log(r);
+    } catch (e) {
+        console.error(e);
+        // process.exit();
+        console.log(JSON.stringify(e));
+    }
+  };
+
+  const transactionDeposit = async () => {
+    const actions = {
+      actions: [
+        {
+          account: "eosio.token",
+          name: "transfer",
+          data: {
+            from: ual.activeUser.accountName,
+            to: "cpu4",
+            quantity: amountToSend + " WAX",
+            memo: "Deposit",
+          },
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: "active",
+            },
+          ],
+        },
+      ],
+    };
+    try {
+    const r = await ual.activeUser.signTransaction(actions, {
+      blocksBehind: 5,
+      expireSeconds: 300,
+      broadcast: true,
+      sign: true,
+    })
+    console.log(r);
+    } catch (e) {
+        console.error(e);
+        // process.exit();
+        console.log(JSON.stringify(e));
+    }
   };
 
   const SEND_OPTIONS = {
-    self: "Stake to self",
-    other: "Stake to other",
-    deposit: "Deposit and earn",
+    self: "Request Self Stake",
+    other: "Stake To User",
+    deposit: "Deposit And Earn",
   };
 
   const TRANSACTIONS = {
     [SEND_OPTIONS.self]: transactionStakeToSelf,
+    [SEND_OPTIONS.other]: transactionStakeToUser,
+    [SEND_OPTIONS.deposit]: transactionDeposit,
   };
 
   const [account, setAccount] = useState();
@@ -45,25 +131,131 @@ const Home = ({ ual }) => {
   const [amountToSend, setAmountToSend] = useState(0);
   const [amountToBeStaked, setAmountToBeStaked] = useState(0);
   const [accountToStake, setAccountToStake] = useState("");
+  const [exponent, setExponent] = useState(1);
+  const [totalWax, setTotalWax] = useState();
+  const [currentLoanedWax, setCurrentLoanedWax] = useState();
+  const [multiDayFee, setMultiDayFee] = useState(0);
+  const [currentBalance, setCurrentBalance] = useState(0);
+
+
+
+// useCallback(() => {
+const getConfig = async () => {
+
+  try {
+    const table = await rpc.get_table_rows({
+        json: true, // Get the response as json
+        code: "cpu4", // Contract that we target
+        scope: "cpu4", // Account that owns the data
+        table: "config", // Table name
+        limit: 1, // Maximum number of rows that we want to get
+        reverse: false, // Optional: Get reversed data
+        show_payer: false, // Optional: Show ram payer
+    });
+    console.log(table["rows"][0]);
+    setExponent(table["rows"][0].exponent);
+    setTotalWax(table["rows"][0].total_wax);
+    setCurrentLoanedWax(table["rows"][0].current_loaned);
+    setMultiDayFee(table["rows"][0].multi_day_fee);
+
+    if (amountToSend && amountToSend > 0) 
+    {
+      var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
+      if (multiplier < 10)
+      {
+          multiplier = 10;
+      }
+      var total = multiplier 
+        * (1 - (multiDayFee * (numberOfDaysOption - 1)))
+        * (amountToSend / numberOfDaysOption);
+      setAmountToBeStaked(total);
+    }
+
+    if (account) {
+      const table2 = await rpc.get_table_rows({
+          json: true, // Get the response as json
+          code: "cpu4", // Contract that we target
+          scope: "cpu4", // Account that owns the data
+          table: "deposits", // Table name
+          limit: 1000, // Maximum number of rows that we want to get
+          reverse: false, // Optional: Get reversed data
+          show_payer: false, // Optional: Show ram payer
+      });
+
+      for (var i = 0; i < table2["rows"].length; i++) {
+        if (table2["rows"][i].account === account) 
+        {
+          setCurrentBalance(table2["rows"][i].wax);
+        }
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    console.log(JSON.stringify(e));
+  }
+};
+// });
+
+  const updateCost = async () => {
+    var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
+    if (multiplier < 10)
+    {
+        multiplier = 10;
+    }
+    var total = multiplier 
+      * (1 - (multiDayFee * (numberOfDaysOption - 1)))
+      * (amountToSend / numberOfDaysOption);
+    setAmountToBeStaked(total);
+  };
 
   useEffect(() => {
     const run = async () => {
       if (ual.activeUser) {
-        const acc = await rpc.get_account(ual.activeUser.accountName);
-        setAccount(acc);
+        try {
+          const acc = await rpc.get_account(ual.activeUser.accountName);
+          setAccount(acc);
+        } catch (e) {
+            console.error(e);
+            // process.exit();
+            console.log(JSON.stringify(e));
+        }
+
       }
     };
     run();
   }, [ual.activeUser]);
 
+
+
   useEffect(() => {
     if (amountToSend && amountToSend > 0) {
+
       // CALL CONTRACT / DO CALCULATION
-      setAmountToBeStaked(amountToSend * 100);
+      updateCost();
     } else {
       setAmountToBeStaked(0);
     }
   }, [amountToSend]);
+
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const run = async () => {
+        await getConfig();
+      };
+
+      run();
+
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [getConfig]);
+
+
+
+
+
+
 
   const openLoginModal = () => {
     if (!ual.activeUser) {
@@ -101,6 +293,15 @@ const Home = ({ ual }) => {
     ) : null;
   };
 
+  const depositedWax = () => {
+    return ual.activeUser && account ? (
+      <div>
+        {currentBalance}
+        <br />
+      </div>
+    ) : null;
+  };
+
   const renderSelectSendOption = () => {
     return (
       <div>
@@ -133,8 +334,8 @@ const Home = ({ ual }) => {
           }}
         >
           <tbody>
-            {renderNumberOfDaysDropdown()}
             {renderAmountToSendInput()}
+            {renderNumberOfDaysDropdown()}
             {renderAmountToBeStaked()}
           </tbody>
         </table>
@@ -149,9 +350,9 @@ const Home = ({ ual }) => {
           }}
         >
           <tbody>
-            {renderAccountToStake()}
-            {renderNumberOfDaysDropdown()}
             {renderAmountToSendInput()}
+            {renderNumberOfDaysDropdown()}
+            {renderUserInput()}
             {renderAmountToBeStaked()}
           </tbody>
         </table>
@@ -171,10 +372,10 @@ const Home = ({ ual }) => {
     }
   };
 
-  const renderAccountToStake = () => {
+  const renderUserInput = () => {
     return (
       <tr>
-        <td style={{ textAlign: "right" }}>Account to stake</td>
+        <td style={{ textAlign: "right" }}>User to stake to</td>
         <td>
           <input
             style={{ width: "120px" }}
@@ -255,9 +456,11 @@ const Home = ({ ual }) => {
   const renderFaq = () => {
     return (
       <div>
-        <h3>How it works:</h3>
+        <h2>How it works:</h2>
+        <h4>Requesting Wax:</h4>
         <p>1. Send wax</p>
         <p>2. ????????</p>
+        <h4>Depositing Wax:</h4>
         <p>3. Get steak</p>
       </div>
     );
@@ -267,6 +470,7 @@ const Home = ({ ual }) => {
     <div>
       <h1>CPU 4 SALE</h1>
       {ual.activeUser ? renderNameAndBalance() : null}
+      {ual.activeUser ? depositedWax() : null}
       {ual.activeUser ? renderLogoutButton() : renderLoginButton()}
       {ual.activeUser ? renderSelectSendOption() : null}
       <br />
