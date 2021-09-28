@@ -203,20 +203,19 @@ const Home = ({ ual }) => {
   const [amountToSend, setAmountToSend] = useState(0);
   const [amountToBeStaked, setAmountToBeStaked] = useState(0);
   const [accountToStake, setAccountToStake] = useState("");
-  const [exponent, setExponent] = useState(1);
-  const [totalWax, setTotalWax] = useState();
-  const [currentLoanedWax, setCurrentLoanedWax] = useState();
-  const [multiDayFee, setMultiDayFee] = useState(0);
+  // const [exponent, setExponent] = useState(1);
+  // const [totalWax, setTotalWax] = useState();
+  // const [currentLoanedWax, setCurrentLoanedWax] = useState();
+  // const [multiDayFee, setMultiDayFee] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
-  const [updateTime, setUpdateTime] = useState();
+  // const [updateTime, setUpdateTime] = useState();
+  const [response, setResponse] = useState();
 
 
-
-// useCallback(() => {
-const getConfig = async () => {
-
-  try {
-    const table = await rpc.get_table_rows({
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      console.log("FETCH");
+      const table = await rpc.get_table_rows({
         json: true, // Get the response as json
         code: "cpu4", // Contract that we target
         scope: "cpu4", // Account that owns the data
@@ -224,62 +223,137 @@ const getConfig = async () => {
         limit: 1, // Maximum number of rows that we want to get
         reverse: false, // Optional: Get reversed data
         show_payer: false, // Optional: Show ram payer
-    });
-    console.log(table["rows"][0]);
-    setExponent(table["rows"][0].exponent);
-    setTotalWax(table["rows"][0].total_wax);
-    setCurrentLoanedWax(table["rows"][0].current_loaned);
-    setMultiDayFee(table["rows"][0].multi_day_fee);
-
-    if (amountToSend && amountToSend > 0) 
-    {
-      var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
-      if (multiplier < 10)
-      {
-          multiplier = 10;
-      }
-      var total = multiplier 
-        * (1 - (multiDayFee * (numberOfDaysOption - 1)))
-        * (amountToSend / numberOfDaysOption);
-      setAmountToBeStaked(total);
-    }
-
-    if (account) {
-      const table2 = await rpc.get_table_rows({
-          json: true, // Get the response as json
-          code: "cpu4", // Contract that we target
-          scope: "cpu4", // Account that owns the data
-          table: "deposits", // Table name
-          limit: 1000, // Maximum number of rows that we want to get
-          reverse: false, // Optional: Get reversed data
-          show_payer: false, // Optional: Show ram payer
       });
+      const table2 = await rpc.get_table_rows({
+        json: true, // Get the response as json
+        code: "cpu4", // Contract that we target
+        scope: "cpu4", // Account that owns the data
+        table: "deposits", // Table name
+        limit: 1000, // Maximum number of rows that we want to get
+        reverse: false, // Optional: Get reversed data
+        show_payer: false, // Optional: Show ram payer
+      });
+      setResponse({ r1: table, r2: table2 });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-      for (var i = 0; i < table2["rows"].length; i++) {
-        if (table2["rows"][i].account === account) 
-        {
-          setCurrentBalance(table2["rows"][i].wax);
+
+
+useEffect(() => {
+    if (amountToSend && amountToSend > 0) {
+      const run = async () => {
+        try {
+          const table = response.r1;
+          console.log(table["rows"][0]);
+
+          const ex = parseFloat(table["rows"][0].exponent);
+          const tw = parseFloat(table["rows"][0].total_wax);
+          const cl = parseFloat(table["rows"][0].current_loaned);
+          const mdf = parseFloat(table["rows"][0].multi_day_fee);
+
+          if (amountToSend && amountToSend > 0) {
+            var multiplier = Math.pow((1.0 - (cl / tw)), ex) * 100;
+            if (multiplier < 10) {
+              multiplier = 10;
+            }
+            var total =
+              multiplier *
+              (1 - (mdf * (numberOfDaysOption - 1))) *
+              (amountToSend / numberOfDaysOption);
+            console.log(total);
+            setAmountToBeStaked(total);
+          }
+
+          const table2 = response.r2;
+
+          for (var i = 0; i < table2["rows"].length; i++) {
+            if (table2["rows"][i].account === "cpubanktrust") {
+              setCurrentBalance(table2["rows"][i].wax);
+            }
+          }
+        } catch (e) {
+          console.error(e);
+          console.log(JSON.stringify(e));
         }
-      }
+      };
+
+      run();
+    } else {
+      setAmountToBeStaked(0);
     }
-  } catch (e) {
-    console.error(e);
-    console.log(JSON.stringify(e));
-  }
-};
+  }, [amountToSend, numberOfDaysOption, response]);
+
+
+
+// useCallback(() => {
+// const getConfig = async () => {
+
+//   try {
+//     const table = await rpc.get_table_rows({
+//         json: true, // Get the response as json
+//         code: "cpu4", // Contract that we target
+//         scope: "cpu4", // Account that owns the data
+//         table: "config", // Table name
+//         limit: 1, // Maximum number of rows that we want to get
+//         reverse: false, // Optional: Get reversed data
+//         show_payer: false, // Optional: Show ram payer
+//     });
+//     console.log(table["rows"][0]);
+//     setExponent(table["rows"][0].exponent);
+//     setTotalWax(table["rows"][0].total_wax);
+//     setCurrentLoanedWax(table["rows"][0].current_loaned);
+//     setMultiDayFee(table["rows"][0].multi_day_fee);
+
+//     if (amountToSend && amountToSend > 0) 
+//     {
+//       var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
+//       if (multiplier < 10)
+//       {
+//           multiplier = 10;
+//       }
+//       var total = multiplier 
+//         * (1 - (multiDayFee * (numberOfDaysOption - 1)))
+//         * (amountToSend / numberOfDaysOption);
+//       setAmountToBeStaked(total);
+//     }
+
+//     if (account) {
+//       const table2 = await rpc.get_table_rows({
+//           json: true, // Get the response as json
+//           code: "cpu4", // Contract that we target
+//           scope: "cpu4", // Account that owns the data
+//           table: "deposits", // Table name
+//           limit: 1000, // Maximum number of rows that we want to get
+//           reverse: false, // Optional: Get reversed data
+//           show_payer: false, // Optional: Show ram payer
+//       });
+
+//       for (var i = 0; i < table2["rows"].length; i++) {
+//         if (table2["rows"][i].account === account) 
+//         {
+//           setCurrentBalance(table2["rows"][i].wax);
+//         }
+//       }
+//     }
+//   } catch (e) {
+//     console.error(e);
+//     console.log(JSON.stringify(e));
+//   }
+// };
 // });
 
-  const updateCost = async () => {
-    var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
-    if (multiplier < 10)
-    {
-        multiplier = 10;
-    }
-    var total = multiplier 
-      * (1 - (multiDayFee * (numberOfDaysOption - 1)))
-      * (amountToSend / numberOfDaysOption);
-    setAmountToBeStaked(total);
-  };
+  // const updateCost = async () => {
+  //   var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
+  //   if (multiplier < 10)
+  //   {
+  //       multiplier = 10;
+  //   }
+  //   var total = multiplier 
+  //     * (1 - (multiDayFee * (numberOfDaysOption - 1)))
+  //     * (amountToSend / numberOfDaysOption);
+  //   setAmountToBeStaked(total);
+  // };
 
   useEffect(() => {
     const run = async () => {
@@ -300,28 +374,28 @@ const getConfig = async () => {
 
 
 
-  useEffect(() => {
-    if (amountToSend && amountToSend > 0) {
+  // useEffect(() => {
+  //   if (amountToSend && amountToSend > 0) {
 
-      // CALL CONTRACT / DO CALCULATION
-      // updateCost();
-      const run = async () => {
-        await getConfig();
-      };
+  //     // CALL CONTRACT / DO CALCULATION
+  //     // updateCost();
+  //     const run = async () => {
+  //       await getConfig();
+  //     };
 
-      run();
-    } else {
-      setAmountToBeStaked(0);
-    }
-  }, [amountToSend,updateTime]);
+  //     run();
+  //   } else {
+  //     setAmountToBeStaked(0);
+  //   }
+  // }, [amountToSend,updateTime]);
 
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setUpdateTime(Date.now());
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setUpdateTime(Date.now());
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
