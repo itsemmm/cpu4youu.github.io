@@ -1,14 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { UALProvider, withUAL } from "ual-reactjs-renderer";
+import { Anchor } from "ual-anchor";
+import { Wax } from "@eosdacio/ual-wax";
+
+const myChain = {
+  chainId: "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4",
+  rpcEndpoints: [
+    {
+      protocol: "https",
+      host: "wax.greymass.com",
+      port: "443",
+    },
+  ],
+};
+
+const anchor = new Anchor([myChain], { appName: "cpu4" });
+const wax = new Wax([myChain], { appName: "cpu4" });
+
+const MyUALConsumer = withUAL(App);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <UALProvider
+      chains={[myChain]}
+      authenticators={[anchor, wax]}
+      appName={"cpu4"}
+    >
+      <MyUALConsumer />
+    </UALProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
