@@ -268,7 +268,7 @@ useEffect(() => {
           const table2 = response.r2;
 
           for (var i = 0; i < table2["rows"].length; i++) {
-            if (table2["rows"][i].account === "cpubanktrust") {
+            if (table2["rows"][i].account === account) {
               setCurrentBalance(table2["rows"][i].wax);
             }
           }
