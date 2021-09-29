@@ -656,7 +656,7 @@ useEffect(() => {
 
   const renderFaq = () => {
     return (
-      <div>
+      <div style={{ textAlign:"left", width:"400px", margin:"auto" }}>
         <h2>How it works:</h2>
         <h4>Users can interact with the cpu4 and free.cpu4 smart contract in a number of ways.:</h4>
         <p>1. Request cpu for themself</p>
