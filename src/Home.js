@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { JsonRpc } from "eosjs";
 
 // const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
@@ -34,9 +34,15 @@ const Home = ({ ual }) => {
       sign: true,
     })
     console.log(r);
+    alert("Transaction ID: " + r.transactionId);
+    setNumberOfDaysOptions(1);
+    setAmountToSend(0);
+    setAmountToBeStaked(0);
+    setAccountToStake("");
     } catch (e) {
         console.error(e);
         // process.exit();
+        alert(e);
         console.log(JSON.stringify(e));
     }
   };
@@ -70,9 +76,15 @@ const Home = ({ ual }) => {
         sign: true,
     })
     console.log(r);
+    alert("Transaction ID: " + r.transactionId);
+    setNumberOfDaysOptions(1);
+    setAmountToSend(0);
+    setAmountToBeStaked(0);
+    setAccountToStake("");
     } catch (e) {
         console.error(e);
         // process.exit();
+        alert(e);
         console.log(JSON.stringify(e));
     }
   };
@@ -106,9 +118,15 @@ const Home = ({ ual }) => {
       sign: true,
     })
     console.log(r);
+    alert("Transaction ID: " + r.transactionId);
+    setNumberOfDaysOptions(1);
+    setAmountToSend(0);
+    setAmountToBeStaked(0);
+    setAccountToStake("");
     } catch (e) {
         console.error(e);
         // process.exit();
+        alert(e);
         console.log(JSON.stringify(e));
     }
   };
@@ -139,9 +157,15 @@ const Home = ({ ual }) => {
       sign: true,
     })
     console.log(r);
+    alert("Transaction ID: " + r.transactionId);
+    setNumberOfDaysOptions(1);
+    setAmountToSend(0);
+    setAmountToBeStaked(0);
+    setAccountToStake("");
     } catch (e) {
         console.error(e);
         // process.exit();
+        alert(e);
         console.log(JSON.stringify(e));
     }
   };
@@ -173,9 +197,15 @@ const Home = ({ ual }) => {
       sign: true,
     })
     console.log(r);
+    alert("Transaction ID: " + r.transactionId);
+    setNumberOfDaysOptions(1);
+    setAmountToSend(0);
+    setAmountToBeStaked(0);
+    setAccountToStake("");
     } catch (e) {
         console.error(e);
         // process.exit();
+        alert(e);
         console.log(JSON.stringify(e));
     }
   };
@@ -203,12 +233,7 @@ const Home = ({ ual }) => {
   const [amountToSend, setAmountToSend] = useState(0);
   const [amountToBeStaked, setAmountToBeStaked] = useState(0);
   const [accountToStake, setAccountToStake] = useState("");
-  // const [exponent, setExponent] = useState(1);
-  // const [totalWax, setTotalWax] = useState();
-  // const [currentLoanedWax, setCurrentLoanedWax] = useState();
-  // const [multiDayFee, setMultiDayFee] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
-  // const [updateTime, setUpdateTime] = useState();
   const [response, setResponse] = useState();
 
 
@@ -282,7 +307,7 @@ useEffect(() => {
     } else {
       setAmountToBeStaked(0);
     }
-  }, [amountToSend, numberOfDaysOption, response]);
+  }, [amountToSend, numberOfDaysOption, response, account]);
 
 
 
