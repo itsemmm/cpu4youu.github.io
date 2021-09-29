@@ -304,10 +304,30 @@ const Home = ({ ual }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const getFirstApiCall = async () => {
+    const table = await rpc.get_table_rows({
+      json: true, // Get the response as json
+      code: "cpu4", // Contract that we target
+      scope: "cpu4", // Account that owns the data
+      table: "config", // Table name
+      limit: 1, // Maximum number of rows that we want to get
+      reverse: false, // Optional: Get reversed data
+      show_payer: false, // Optional: Show ram payer
+    });
+    const table2 = await rpc.get_table_rows({
+      json: true, // Get the response as json
+      code: "cpu4", // Contract that we target
+      scope: "cpu4", // Account that owns the data
+      table: "deposits", // Table name
+      limit: 1000, // Maximum number of rows that we want to get
+      reverse: false, // Optional: Get reversed data
+      show_payer: false, // Optional: Show ram payer
+    });
+    setResponse({ r1: table, r2: table2 });
+  };
 
 
 useEffect(() => {
-    if (amountToSend && amountToSend > 0) {
       const run = async () => {
         try {
           const table = response.r1;
@@ -329,6 +349,8 @@ useEffect(() => {
               (amountToSend / numberOfDaysOption);
             console.log(total);
             setAmountToBeStaked(total);
+          } else{
+            setAmountToBeStaked(0);
           }
 
           const table2 = response.r2;
@@ -345,9 +367,6 @@ useEffect(() => {
       };
 
       run();
-    } else {
-      setAmountToBeStaked(0);
-    }
   }, [amountToSend, numberOfDaysOption, response, account]);
 
 
@@ -357,6 +376,7 @@ useEffect(() => {
         try {
           const acc = await rpc.get_account(ual.activeUser.accountName);
           setAccount(acc);
+          getFirstApiCall();
         } catch (e) {
             console.error(e);
             // process.exit();
