@@ -14,7 +14,7 @@ const Home = ({ ual }) => {
           data: {
             from: ual.activeUser.accountName,
             to: "cpu4",
-            quantity: amountToSend.toFixed(8) + " WAX",
+            quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
             memo: numberOfDaysOption + "",
           },
           authorization: [
@@ -50,7 +50,7 @@ const Home = ({ ual }) => {
           data: {
             from: ual.activeUser.accountName,
             to: "cpu4",
-            quantity: amountToSend.toFixed(8) + " WAX",
+            quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
             memo: "USER:" + accountToStake + "," + numberOfDaysOption,
           },
           authorization: [
@@ -86,7 +86,7 @@ const Home = ({ ual }) => {
           data: {
             from: ual.activeUser.accountName,
             to: "cpu4",
-            quantity: amountToSend.toFixed(8) + " WAX",
+            quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
             memo: "Deposit",
           },
           authorization: [
@@ -154,7 +154,7 @@ const Home = ({ ual }) => {
           name: "withdraw",
           data: {
             username: ual.activeUser.accountName,
-            amount: amountToSend.toFixed(8) + " WAX",
+            amount: parseFloat(amountToSend).toFixed(8) + " WAX",
           },
           authorization: [
             {
