@@ -329,6 +329,8 @@ const Home = ({ ual }) => {
 
 useEffect(() => {
       const run = async () => {
+        if (response)
+        {
         try {
           const table = response.r1;
           console.log(table["rows"][0]);
@@ -364,6 +366,7 @@ useEffect(() => {
           console.error(e);
           console.log(JSON.stringify(e));
         }
+      }
       };
 
       run();
@@ -655,11 +658,92 @@ useEffect(() => {
     return (
       <div>
         <h2>How it works:</h2>
-        <h4>Requesting Wax:</h4>
-        <p>1. Send wax</p>
-        <p>2. ????????</p>
-        <h4>Depositing Wax:</h4>
-        <p>3. Get steak</p>
+        <h4>Users can interact with the cpu4 and free.cpu4 smart contract in a number of ways.:</h4>
+        <p>1. Request cpu for themself</p>
+        <p>2. Request cpu for a different user</p>
+        <p>3. Requesting free cpu</p>
+        <p>4. Deposit wax to earn</p>
+        <p>5. Update user collected fees</p>
+        <p>6. Withdraw deposited wax</p>
+        <p><b><i>All transactions are final.</i></b></p>
+        <h4>Request CPU for Self</h4>
+        <p>Send wax to cpu4</p>
+        <p>The system dynamically creates a price for the staked wax given the current supply, total loaned out, number of days, and amount user requests.</p>
+        <p>Then that wax is sent to a minion account and staked to the user for the given time.</p>
+        <p></p>
+        <h4>Request CPU for Others</h4>
+        <p>Similar to requesting to yourself, this does the first few steps but then directly stakes to the user specified.</p>
+        <p>The memo must contain USER:&lt;username&gt;,&lt;days&gt;</p>
+        <p>This can be sent from anyone for anyone else.</p>
+        <h4>Request Free CPU</h4>
+        <p>Users can call the action getcpu from the contract free.cpu4.</p>
+        <p>As long as this account has wax it will send in a specified amount to the main contract requesting cpu as if it was a regular user.</p>
+        <p>It follows the same format as requesting cpu for a different user but it pays the wax from its balance.</p>
+        <p>This can only be given to someone once per 48 hours.</p>
+        <h4>Deposit to Earn</h4>
+        <p>Users can also deposit wax to earn 70% of the total fees collected.</p>
+        <p>You can send at least 1000 wax to cpu4 with the memo Deposit</p>
+        <p>This will immediately update the system and you will earn part of any fees after that transaction.</p>
+        <p>Users can do this at little or often as they would like, there is no maximum one can send in.</p>
+        <h4>Update Collected Fees</h4>
+        <p>This method is not required but will immediately update the table entry with how much wax the user has.</p>
+        <p>At the top of this page under you current balance there is a deposited amount listed.</p>
+        <p>This function will update the fees in the contract table and show you how much you could withdraw in total.</p>
+        <h4>Update Collected Fees</h4>
+        <p>At any time a user can request to withdraw deposited wax.</p>
+        <p>A user can make as many withdraw requests as they want up to the total wax they have deposited.</p>
+        <p>If there is not enough liquid wax, as more gets unstaked it will be sent in order to users in line to withdraw.</p>
+        <h2>FAQ:</h2>
+        <h4>How are fees calculated?</h4>
+        <p>multiplier = (1.0 - (current loaned wax / total wax in system))^(exponent) * 100</p>
+        <p>if the multiplier is less than 10 then we just use 10.</p>
+        <p>total staked wax = multiplier * (1 - (multi day fee * (number of days requested - 1))) * (wax sent in / number of days requested)</p>
+        <p>This process keeps the price dynamic based on the current load and changes with every buy or unstake</p>
+        <h4>Is this code public?</h4>
+        <p>All the website code is located at https://github.com/cpu4youu/cpu4youu.github.io</p>
+        <h4>How do depositors earn?</h4>
+        <p>Every time someone requests some wax they need to first send in a fee.</p>
+        <p>That fee is broken up into 4 parts.</p>
+        <p> 70% which goes to the depositors pool</p>
+        <p> 10% goes to the admin.cpu4 account (For dev team)</p>
+        <p> 10% goes to the reserve.cpu4 account</p>
+        <p> 10% goes to the free.cpu4 account</p>
+        <br></br>
+        <p>As long as a user has some wax deposited they earn their share of the 70% of the fees collected</p>
+        <p>The admin fee funds the development of new updates and sets the system up to have great service</p>
+        <p>The reserve is a special account. It collects fees until the current rate of wax to cpu is 1 - 10.</p>
+        <p>Once this happens the system requests wax and all the wax in the reserve account get sent back to the cpu4 account.</p>
+        <p>This does a few things, it lowers the current fee and rates the rate for users meaning before a user sends 1 wax in and gets 10</p>
+        <p>staked but now maybe the send 1 in and get 20 staked. It also adds liquidity if users are trying to withdraw, and</p>
+        <p>it grows the system wax which helps more users get access to cpu.</p>
+        <p>Then finally the free.cpu4 account is set up as a completely free system. Users can directly go to the smart contract and </p>
+        <p>enter a username to recieve some free cpu every 48 hours. As long as it has wax it can continue to service users.</p>
+        <p>Since it is funded by the normal app, as long as the normal app is being used it will keep getting wax to give to users for free.</p>
+        <p>The rates/fees and starting value for the free account are all subject to change. Any changes will be posted on this page.</p>
+        <h4>How does staking work?</h4>
+        <p>I use multiple minion accounts to stake to users on a per request basis.</p>
+        <p>No minion stakes to more than 1 user at a time and so it can be very efficient.</p>
+        <p>I also use a dynamic system to ustake and keep track of minions who are done but still not free.</p>
+        <p>All smart contract code is proprietary software.</p>
+        <h4>I found a bug, what do I do?</h4>
+        <p>Please go to the discord and find the bug bounty channel.</p>
+        <p>Depending no how severe it is, you can be compensated for posting it first.</p>
+        <h4>I need help or have a question where do I go?</h4>
+        <p>Discord: https://discord.gg/vwkZeH95</p>
+        <p>Telegram: https://t.me/joinchat/L2y-P0pVWS5lMTkx</p>
+        <h4>Why did you start this, can I trust you?</h4>
+        <p>I have been creating smart contracts and dapps for almost a year now but programming since 2014.</p>
+        <p>The wax dev team sponsored my research and development in creating this service for everyone and I intend to keep updating it</p>
+        <p>and bringing new features to users and allowing users free access to my services.</p>
+        <p>Some wax projects I have worked on are:</p>
+        <p> Nova Rally</p>
+        <p> Olive Land</p>
+        <p> Beast Garden</p>
+        <p> Gods and Legends</p>
+        <p> Poly Play</p>
+        <p>I also have an Alien Worlds cpu service located at www.limitlesswax.co</p>
+        <br></br>
+        <p>Thank you for your time, I hope you enjoy my service!</p>
       </div>
     );
   };
