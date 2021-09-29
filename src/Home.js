@@ -332,9 +332,9 @@ useEffect(() => {
           }
 
           const table2 = response.r2;
-
+          setCurrentBalance("0 WAX");
           for (var i = 0; i < table2["rows"].length; i++) {
-            if (table2["rows"][i].account === account) {
+            if (table2["rows"][i].account === account.account_name) {
               setCurrentBalance(table2["rows"][i].wax);
             }
           }
