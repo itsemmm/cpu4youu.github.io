@@ -89,6 +89,45 @@ const Home = ({ ual }) => {
     }
   };
 
+  const transactionFreeCPU = async () => {
+    const actions = {
+      actions: [
+        {
+          account: "free.cpu4",
+          name: "getcpu",
+          data: {
+            username: accountToStake,
+          },
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: "active",
+            },
+          ],
+        },
+      ],
+    };
+    try {
+    const r = await ual.activeUser.signTransaction(actions, {
+      blocksBehind: 5,
+        expireSeconds: 300,
+        broadcast: true,
+        sign: true,
+    })
+    console.log(r);
+    alert("Transaction ID: " + r.transactionId);
+    setNumberOfDaysOptions(1);
+    setAmountToSend(0);
+    setAmountToBeStaked(0);
+    setAccountToStake("");
+    } catch (e) {
+        console.error(e);
+        // process.exit();
+        alert(e);
+        console.log(JSON.stringify(e));
+    }
+  };
+
   const transactionDeposit = async () => {
     const actions = {
       actions: [
@@ -213,6 +252,7 @@ const Home = ({ ual }) => {
   const SEND_OPTIONS = {
     self: "Request Self Stake",
     other: "Stake To User",
+    free: "Get Free CPU",
     deposit: "Deposit And Earn",
     update: "Update Balance",
     withdraw: "Withdraw",
@@ -221,6 +261,7 @@ const Home = ({ ual }) => {
   const TRANSACTIONS = {
     [SEND_OPTIONS.self]: transactionStakeToSelf,
     [SEND_OPTIONS.other]: transactionStakeToUser,
+    [SEND_OPTIONS.free]: transactionFreeCPU,
     [SEND_OPTIONS.deposit]: transactionDeposit,
     [SEND_OPTIONS.update]: transactionUpdateBalance,
     [SEND_OPTIONS.withdraw]: transactionWithdraw,
@@ -310,76 +351,6 @@ useEffect(() => {
   }, [amountToSend, numberOfDaysOption, response, account]);
 
 
-
-// useCallback(() => {
-// const getConfig = async () => {
-
-//   try {
-//     const table = await rpc.get_table_rows({
-//         json: true, // Get the response as json
-//         code: "cpu4", // Contract that we target
-//         scope: "cpu4", // Account that owns the data
-//         table: "config", // Table name
-//         limit: 1, // Maximum number of rows that we want to get
-//         reverse: false, // Optional: Get reversed data
-//         show_payer: false, // Optional: Show ram payer
-//     });
-//     console.log(table["rows"][0]);
-//     setExponent(table["rows"][0].exponent);
-//     setTotalWax(table["rows"][0].total_wax);
-//     setCurrentLoanedWax(table["rows"][0].current_loaned);
-//     setMultiDayFee(table["rows"][0].multi_day_fee);
-
-//     if (amountToSend && amountToSend > 0) 
-//     {
-//       var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
-//       if (multiplier < 10)
-//       {
-//           multiplier = 10;
-//       }
-//       var total = multiplier 
-//         * (1 - (multiDayFee * (numberOfDaysOption - 1)))
-//         * (amountToSend / numberOfDaysOption);
-//       setAmountToBeStaked(total);
-//     }
-
-//     if (account) {
-//       const table2 = await rpc.get_table_rows({
-//           json: true, // Get the response as json
-//           code: "cpu4", // Contract that we target
-//           scope: "cpu4", // Account that owns the data
-//           table: "deposits", // Table name
-//           limit: 1000, // Maximum number of rows that we want to get
-//           reverse: false, // Optional: Get reversed data
-//           show_payer: false, // Optional: Show ram payer
-//       });
-
-//       for (var i = 0; i < table2["rows"].length; i++) {
-//         if (table2["rows"][i].account === account) 
-//         {
-//           setCurrentBalance(table2["rows"][i].wax);
-//         }
-//       }
-//     }
-//   } catch (e) {
-//     console.error(e);
-//     console.log(JSON.stringify(e));
-//   }
-// };
-// });
-
-  // const updateCost = async () => {
-  //   var multiplier = (1.0 - (currentLoanedWax / totalWax)^(exponent)) * 100;
-  //   if (multiplier < 10)
-  //   {
-  //       multiplier = 10;
-  //   }
-  //   var total = multiplier 
-  //     * (1 - (multiDayFee * (numberOfDaysOption - 1)))
-  //     * (amountToSend / numberOfDaysOption);
-  //   setAmountToBeStaked(total);
-  // };
-
   useEffect(() => {
     const run = async () => {
       if (ual.activeUser) {
@@ -396,56 +367,6 @@ useEffect(() => {
     };
     run();
   }, [ual.activeUser]);
-
-
-
-  // useEffect(() => {
-  //   if (amountToSend && amountToSend > 0) {
-
-  //     // CALL CONTRACT / DO CALCULATION
-  //     // updateCost();
-  //     const run = async () => {
-  //       await getConfig();
-  //     };
-
-  //     run();
-  //   } else {
-  //     setAmountToBeStaked(0);
-  //   }
-  // }, [amountToSend,updateTime]);
-
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setUpdateTime(Date.now());
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-      // const run = async () => {
-      //   await getConfig();
-      // };
-
-      // run();
-
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, [getConfig]);
-
-
-
-// useEffect(() => {
-//     const interval = setInterval(async () => {
-//         await getConfig();
-//     }, 5000);
-//     return () => clearInterval(interval);
-//   }, [getConfig]);
-
-
-
-
 
 
   const openLoginModal = () => {
@@ -504,6 +425,7 @@ useEffect(() => {
         >
           <option value={SEND_OPTIONS.self}>{SEND_OPTIONS.self}</option>
           <option value={SEND_OPTIONS.other}>{SEND_OPTIONS.other}</option>
+          <option value={SEND_OPTIONS.free}>{SEND_OPTIONS.free}</option>
           <option value={SEND_OPTIONS.deposit}>{SEND_OPTIONS.deposit}</option>
           <option value={SEND_OPTIONS.update}>{SEND_OPTIONS.update}</option>
           <option value={SEND_OPTIONS.withdraw}>{SEND_OPTIONS.withdraw}</option>
@@ -548,6 +470,20 @@ useEffect(() => {
             {renderNumberOfDaysDropdown()}
             {renderUserInput()}
             {renderAmountToBeStaked()}
+          </tbody>
+        </table>
+      );
+    } else if (sendOption === SEND_OPTIONS.free) {
+      return (
+        <table
+          style={{
+            margin: "auto",
+            borderSpacing: "12px 12px",
+            textAlign: "left",
+          }}
+        >
+          <tbody>
+            {renderUserInput()}
           </tbody>
         </table>
       );
