@@ -175,7 +175,7 @@ const Home = ({ ual }) => {
       actions: [
         {
           account: "cpu4",
-          name: "updateBalance",
+          name: "updatealance",
           data: {
             username: ual.activeUser.accountName,
           },
