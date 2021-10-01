@@ -276,6 +276,8 @@ const Home = ({ ual }) => {
   const [accountToStake, setAccountToStake] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
   const [response, setResponse] = useState();
+  const [totalWax, setTotalWax] = useState(0);
+  const [freeWax, setFreeWax] = useState(0);
 
 
   useEffect(() => {
@@ -340,6 +342,9 @@ useEffect(() => {
           const cl = parseFloat(table["rows"][0].current_loaned);
           const mdf = parseFloat(table["rows"][0].multi_day_fee);
 
+          setTotalWax(table["rows"][0].total_wax);
+          setFreeWax((tw - cl) + " WAX");
+
           if (amountToSend && amountToSend > 0) {
             var multiplier = Math.pow((1.0 - (cl / tw)), ex) * 100;
             if (multiplier < 10) {
@@ -354,12 +359,14 @@ useEffect(() => {
           } else{
             setAmountToBeStaked(0);
           }
-
-          const table2 = response.r2;
-          setCurrentBalance("0 WAX");
-          for (var i = 0; i < table2["rows"].length; i++) {
-            if (table2["rows"][i].account === account.account_name) {
-              setCurrentBalance(table2["rows"][i].wax);
+          if (account) 
+          {
+            const table2 = response.r2;
+            setCurrentBalance("0 WAX");
+            for (var i = 0; i < table2["rows"].length; i++) {
+              if (table2["rows"][i].account === account.account_name) {
+                setCurrentBalance(table2["rows"][i].wax);
+              }
             }
           }
         } catch (e) {
@@ -433,10 +440,21 @@ useEffect(() => {
     return ual.activeUser && account ? (
       <div>
         Deposited: {currentBalance}
-        <br />
+        <br /><br />
       </div>
     ) : null;
   };
+
+  const waxSupply = () => {
+    return (
+      <div>
+        Total Wax in System: {totalWax}<br />
+        Wax Available to Rent: {freeWax}
+        <br />
+      </div>
+    );
+  };
+
 
   const renderSelectSendOption = () => {
     return (
@@ -753,6 +771,7 @@ useEffect(() => {
       <h1>CPU 4 SALE</h1>
       {ual.activeUser ? renderNameAndBalance() : null}
       {ual.activeUser ? depositedWax() : null}
+      {waxSupply()}
       {ual.activeUser ? renderLogoutButton() : renderLoginButton()}
       {ual.activeUser ? renderSelectSendOption() : null}
       <br />
