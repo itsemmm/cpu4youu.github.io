@@ -677,6 +677,7 @@ useEffect(() => {
       <div style={{ textAlign:"left", width:"400px", margin:"auto" }}>
         <h2>What is cpu4?</h2>
         <p>CPU4 is a new cpu renting system on the wax blockchain, created with help from the WAX Dev team and community members(Vaaaan). It allows anyone to rent cpu or deposit wax and earn from renting to others. The price is dynamically set between a 1% and 10% fee and it changes everytime someone deposits/withdraws/rents/returns wax. Users first send the fee then get staked the amount of wax it would pay for. Users are limited to how much they can rent in a single transaction but can make multiple requests as long as there is wax available. There is also a free system implemented but it has limits too.</p>
+        <p>The system will be open for 1 week before allowing users to deposit their own wax to earn. If users find bugs there is a bug bounty program on discord.</p>
         <h2>How it works:</h2>
         <h4>Users can interact with the cpu4 and free.cpu4 smart contract in a number of ways:</h4>
         <p>1. Request cpu for themself</p>
