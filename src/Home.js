@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { JsonRpc } from "eosjs";
 
-// const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
-const rpc = new JsonRpc("https://testnet.wax.eosdetroit.io", { fetch });
+const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
+// const rpc = new JsonRpc("https://testnet.wax.eosdetroit.io", { fetch });
 
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
