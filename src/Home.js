@@ -750,7 +750,7 @@ useEffect(() => {
         <p>Please go to the discord and find the bug bounty channel.</p>
         <p>Depending no how severe it is, you can be compensated for posting it first.</p>
         <h4>I need help or have a question where do I go?</h4>
-        <p>Discord: https://discord.gg/vwkZeH95</p>
+        <p>Discord: https://discord.gg/UJzBuRa9sY</p>
         <p>Telegram: https://t.me/joinchat/L2y-P0pVWS5lMTkx</p>
         <h4>Why did you start this, can I trust you?</h4>
         <p>I have been creating smart contracts and dapps for almost a year now but programming since 2014.</p>
