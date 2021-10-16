@@ -449,7 +449,7 @@ useEffect(() => {
     return (
       <div>
         Total Wax in System: {totalWax}<br />
-        Wax Available to Rent: {freeWax}
+        <p style={{color:"red"}}>Wax Available to Rent: {freeWax}</p>
         <br />
       </div>
     );
