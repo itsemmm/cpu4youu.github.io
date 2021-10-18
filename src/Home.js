@@ -710,7 +710,7 @@ useEffect(() => {
         <p>This method is not required but will immediately update the table entry with how much wax the user has.</p>
         <p>At the top of this page under you current balance there is a deposited amount listed.</p>
         <p>This function will update the fees in the contract table and show you how much you could withdraw in total.</p>
-        <h4>Update Collected Fees</h4>
+        <h4>Withdraw Deposited Wax</h4>
         <p>At any time a user can request to withdraw deposited wax.</p>
         <p>A user can make as many withdraw requests as they want up to the total wax they have deposited.</p>
         <p>If there is not enough liquid wax, as more gets unstaked it will be sent in order to users in line to withdraw.</p>
