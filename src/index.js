@@ -12,7 +12,7 @@ const myChain = {
   rpcEndpoints: [
     {
       protocol: "https",
-      host: "api-wax.eosauthority.com",
+      host: "wax.greymass.com",
       port: "443",
     },
   ],
