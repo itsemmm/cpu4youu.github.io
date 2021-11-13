@@ -35,9 +35,9 @@ const Home = ({ ual }) => {
     })
     console.log(r);
     alert("Transaction ID: " + r.transactionId);
-    setNumberOfDaysOptions(1);
-    setAmountToSend(0);
+    setNumberOfDaysOptions(3);
     setAmountToBeStaked(0);
+    setAmountToSend(1);
     setAccountToStake("");
     } catch (e) {
         console.error(e);
@@ -727,9 +727,9 @@ useEffect(() => {
         <p>Every time someone requests some wax they need to first send in a fee.</p>
         <p>That fee is broken up into 4 parts.</p>
         <p> 70% which goes to the depositors pool</p>
-        <p> 10% goes to the admin.cpu4 account (For dev team)</p>
+        <p> 15% goes to the admin.cpu4 account (For dev team)</p>
         <p> 10% goes to the reserve.cpu4 account</p>
-        <p> 10% goes to the free.cpu4 account</p>
+        <p> 5% goes to the free.cpu4 account</p>
         <br></br>
         <p>As long as a user has some wax deposited they earn their share of the 70% of the fees collected</p>
         <p>The admin fee funds the development of new updates and sets the system up to have great service</p>
