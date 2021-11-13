@@ -77,9 +77,9 @@ const Home = ({ ual }) => {
     })
     console.log(r);
     alert("Transaction ID: " + r.transactionId);
-    setNumberOfDaysOptions(1);
-    setAmountToSend(0);
+    setNumberOfDaysOptions(3);
     setAmountToBeStaked(0);
+    setAmountToSend(1);
     setAccountToStake("");
     } catch (e) {
         console.error(e);
@@ -116,9 +116,9 @@ const Home = ({ ual }) => {
     })
     console.log(r);
     alert("Transaction ID: " + r.transactionId);
-    setNumberOfDaysOptions(1);
-    setAmountToSend(0);
+    setNumberOfDaysOptions(3);
     setAmountToBeStaked(0);
+    setAmountToSend(1);
     setAccountToStake("");
     } catch (e) {
         console.error(e);
@@ -158,9 +158,9 @@ const Home = ({ ual }) => {
     })
     console.log(r);
     alert("Transaction ID: " + r.transactionId);
-    setNumberOfDaysOptions(1);
-    setAmountToSend(0);
+    setNumberOfDaysOptions(3);
     setAmountToBeStaked(0);
+    setAmountToSend(1);
     setAccountToStake("");
     } catch (e) {
         console.error(e);
@@ -197,9 +197,9 @@ const Home = ({ ual }) => {
     })
     console.log(r);
     alert("Transaction ID: " + r.transactionId);
-    setNumberOfDaysOptions(1);
-    setAmountToSend(0);
+    setNumberOfDaysOptions(3);
     setAmountToBeStaked(0);
+    setAmountToSend(1);
     setAccountToStake("");
     } catch (e) {
         console.error(e);
@@ -237,9 +237,9 @@ const Home = ({ ual }) => {
     })
     console.log(r);
     alert("Transaction ID: " + r.transactionId);
-    setNumberOfDaysOptions(1);
-    setAmountToSend(0);
+    setNumberOfDaysOptions(3);
     setAmountToBeStaked(0);
+    setAmountToSend(1);
     setAccountToStake("");
     } catch (e) {
         console.error(e);
@@ -270,8 +270,8 @@ const Home = ({ ual }) => {
 
   const [account, setAccount] = useState();
   const [sendOption, setSendOption] = useState(SEND_OPTIONS.self);
-  const [numberOfDaysOption, setNumberOfDaysOptions] = useState(1);
-  const [amountToSend, setAmountToSend] = useState(0);
+  const [numberOfDaysOption, setNumberOfDaysOptions] = useState(3);
+  const [amountToSend, setAmountToSend] = useState(1);
   const [amountToBeStaked, setAmountToBeStaked] = useState(0);
   const [accountToStake, setAccountToStake] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
