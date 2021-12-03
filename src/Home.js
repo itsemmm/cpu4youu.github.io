@@ -346,9 +346,9 @@ useEffect(() => {
           setFreeWax((tw - cl) + " WAX");
 
           if (amountToSend && amountToSend > 0) {
-            var multiplier = Math.pow((1.0 - (cl / tw)), ex) * 100;
-            if (multiplier < 10) {
-              multiplier = 10;
+            var multiplier = Math.pow((1.0 - (cl / tw)), ex) * 300;
+            if (multiplier < 20) {
+              multiplier = 20;
             }
             var total =
               multiplier *
