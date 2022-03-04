@@ -6,7 +6,7 @@ const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
 
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
-    const actions = {};
+    var actions = {};
     if (ual.activeAuthenticator.wax) {
       console.log("Yes a wcw user");
       actions = {
@@ -90,7 +90,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionStakeToUser = async () => {
-    const actions = {};
+    var actions = {};
     if (ual.activeAuthenticator.wax) {
       console.log("Yes a wcw user");
       actions = {
@@ -175,7 +175,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionFreeCPU = async () => {
-    const actions = {};
+    var actions = {};
     if (ual.activeAuthenticator.wax) {
       console.log("Yes a wcw user");
       actions = {
@@ -254,7 +254,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionDeposit = async () => {
-    const actions = {};
+    var actions = {};
     if (ual.activeAuthenticator.wax) {
       console.log("Yes a wcw user");
       actions = {
@@ -339,7 +339,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionUpdateBalance = async () => {
-    const actions = {};
+    var actions = {};
     if (ual.activeAuthenticator.wax) {
       console.log("Yes a wcw user");
       actions = {
@@ -418,7 +418,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionWithdraw = async () => {
-    const actions = {};
+    var actions = {};
     if (ual.activeAuthenticator.wax) {
       console.log("Yes a wcw user");
       actions = {
