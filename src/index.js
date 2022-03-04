@@ -5,7 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UALProvider, withUAL } from "ual-reactjs-renderer";
 import { Anchor } from "ual-anchor";
-import { Wax } from "@eosdacio/ual-wax";
+// import { Wax } from "@eosdacio/ual-wax";
+import { Wax } from "../node_modules/@deraxyna/ual-wax/dist";
 
 const myChain = {
   chainId: "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4",

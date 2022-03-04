@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@deraxyna/ual-anchor": "git+https://github.com/deraXyna/ual-anchor.git",
+    "@deraxyna/ual-wax": "git+https://github.com/deraXyna/ual-wax.git",
     "@eosdacio/ual-wax": "^1.5.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
