@@ -7,7 +7,8 @@ const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
+    // if (ual.activeAuthenticator.wax) {
+    if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -91,7 +92,8 @@ const Home = ({ ual }) => {
 
   const transactionStakeToUser = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
+    // if (ual.activeAuthenticator.wax) {
+    if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -176,7 +178,8 @@ const Home = ({ ual }) => {
 
   const transactionFreeCPU = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
+    // if (ual.activeAuthenticator.wax) {
+    if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -255,7 +258,8 @@ const Home = ({ ual }) => {
 
   const transactionDeposit = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
+    // if (ual.activeAuthenticator.wax) {
+    if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -419,7 +423,8 @@ const Home = ({ ual }) => {
 
   const transactionWithdraw = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
+    // if (ual.activeAuthenticator.wax) {
+    if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
