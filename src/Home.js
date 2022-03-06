@@ -7,8 +7,8 @@ const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
     var actions = {};
-    // if (ual.activeAuthenticator.wax) {
-    if (false) {
+    if (ual.activeAuthenticator.wax) {
+      // if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -92,8 +92,8 @@ const Home = ({ ual }) => {
 
   const transactionStakeToUser = async () => {
     var actions = {};
-    // if (ual.activeAuthenticator.wax) {
-    if (false) {
+    if (ual.activeAuthenticator.wax) {
+      // if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -178,8 +178,8 @@ const Home = ({ ual }) => {
 
   const transactionFreeCPU = async () => {
     var actions = {};
-    // if (ual.activeAuthenticator.wax) {
-    if (false) {
+    if (ual.activeAuthenticator.wax) {
+      // if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -258,8 +258,8 @@ const Home = ({ ual }) => {
 
   const transactionDeposit = async () => {
     var actions = {};
-    // if (ual.activeAuthenticator.wax) {
-    if (false) {
+    if (ual.activeAuthenticator.wax) {
+      // if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -423,8 +423,8 @@ const Home = ({ ual }) => {
 
   const transactionWithdraw = async () => {
     var actions = {};
-    // if (ual.activeAuthenticator.wax) {
-    if (false) {
+    if (ual.activeAuthenticator.wax) {
+      // if (false) {
       console.log("Yes a wcw user");
       actions = {
         max_cpu_usage_ms: 5,
@@ -503,6 +503,88 @@ const Home = ({ ual }) => {
     }
   };
 
+  const transactionTest = async () => {
+    var actions = {};
+    if (ual.activeAuthenticator.wax) {
+      // if (false) {
+      console.log("Yes a wcw user");
+      actions = {
+        max_cpu_usage_ms: 5,
+        max_net_usage_words: 5000,
+        actions: [
+          {
+            account: "limitlesswax",
+            name: "paycpu",
+            data: {
+              user: ual.activeUser.accountName,
+              info: "5 ms max",
+            },
+            authorization: [
+              {
+                actor: "limitlesswax",
+                permission: "cosign",
+              },
+            ],
+          },
+          {
+            account: "cpu4",
+            name: "withdraw",
+            data: {
+              username: ual.activeUser.accountName,
+              amount: parseFloat(amountToSend).toFixed(8) + " WAX",
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+        ],
+      };
+    } else {
+      console.log("Not a wcw user");
+      actions = {
+        // actions: [
+        //   {
+        //     account: "cpu4",
+        //     name: "withdraw",
+        //     data: {
+        //       username: ual.activeUser.accountName,
+        //       amount: parseFloat(amountToSend).toFixed(8) + " WAX",
+        //     },
+        //     authorization: [
+        //       {
+        //         actor: ual.activeUser.accountName,
+        //         permission: "active",
+        //       },
+        //     ],
+        //   },
+        // ],
+      };
+    }
+
+    try {
+      const r = await ual.activeUser.signTransaction(actions, {
+        blocksBehind: 5,
+        expireSeconds: 300,
+        broadcast: true,
+        sign: true,
+      });
+      console.log(r);
+      alert("Transaction ID: " + r.transactionId);
+      setNumberOfDaysOptions(3);
+      setAmountToBeStaked(0);
+      setAmountToSend(1);
+      setAccountToStake("");
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      alert(e);
+      console.log(JSON.stringify(e));
+    }
+  };
+
   const SEND_OPTIONS = {
     self: "Request Self Stake",
     other: "Stake To User",
@@ -510,6 +592,7 @@ const Home = ({ ual }) => {
     deposit: "Deposit And Earn",
     update: "Update Balance",
     withdraw: "Withdraw",
+    test: "Test",
   };
 
   const TRANSACTIONS = {
@@ -519,6 +602,7 @@ const Home = ({ ual }) => {
     [SEND_OPTIONS.deposit]: transactionDeposit,
     [SEND_OPTIONS.update]: transactionUpdateBalance,
     [SEND_OPTIONS.withdraw]: transactionWithdraw,
+    [SEND_OPTIONS.test]: transactionTest,
   };
 
   const [account, setAccount] = useState();
@@ -717,6 +801,7 @@ const Home = ({ ual }) => {
           <option value={SEND_OPTIONS.deposit}>{SEND_OPTIONS.deposit}</option>
           <option value={SEND_OPTIONS.update}>{SEND_OPTIONS.update}</option>
           <option value={SEND_OPTIONS.withdraw}>{SEND_OPTIONS.withdraw}</option>
+          <option value={SEND_OPTIONS.test}>{SEND_OPTIONS.test}</option>
         </select>
         <br />
         <br />
@@ -809,6 +894,18 @@ const Home = ({ ual }) => {
           <tbody>{renderWithdraw()}</tbody>
         </table>
       );
+    } else if (sendOption === SEND_OPTIONS.test) {
+      return (
+        <table
+          style={{
+            margin: "auto",
+            borderSpacing: "12px 12px",
+            textAlign: "left",
+          }}
+        >
+          <tbody>{renderTest()}</tbody>
+        </table>
+      );
     }
   };
 
@@ -882,6 +979,23 @@ const Home = ({ ual }) => {
     return (
       <tr>
         <td style={{ textAlign: "right" }}>Amount to withdraw</td>
+        <td>
+          <input
+            style={{ width: "60px" }}
+            type="number"
+            value={amountToSend}
+            onChange={(e) => setAmountToSend(e.target.value)}
+          />{" "}
+          WAX
+        </td>
+      </tr>
+    );
+  };
+
+  const renderTest = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Amount to Test</td>
         <td>
           <input
             style={{ width: "60px" }}
