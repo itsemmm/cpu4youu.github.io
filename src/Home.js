@@ -104,27 +104,21 @@ const Home = ({ ual }) => {
 
   const transactionStakeToUser = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      // if (false) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
       actions = {
-        max_cpu_usage_ms: 5,
-        max_net_usage_words: 5000,
         actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: "5 ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
           {
             account: "eosio.token",
             name: "transfer",
@@ -144,9 +138,26 @@ const Home = ({ ual }) => {
         ],
       };
     } else {
-      console.log("Not a wcw user");
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
+        max_cpu_usage_ms: 5,
+        max_net_usage_words: 5000,
         actions: [
+          {
+            account: "limitlesswax",
+            name: "paycpu",
+            data: {
+              user: ual.activeUser.accountName,
+              info: "5 ms max",
+            },
+            authorization: [
+              {
+                actor: "limitlesswax",
+                permission: "cosign",
+              },
+            ],
+          },
           {
             account: "eosio.token",
             name: "transfer",
@@ -190,9 +201,39 @@ const Home = ({ ual }) => {
 
   const transactionFreeCPU = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      // if (false) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
+      actions = {
+        actions: [
+          {
+            account: "free.cpu4",
+            name: "getcpu",
+            data: {
+              username: accountToStake,
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+        ],
+      };
+    } else {
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
@@ -211,25 +252,6 @@ const Home = ({ ual }) => {
               },
             ],
           },
-          {
-            account: "free.cpu4",
-            name: "getcpu",
-            data: {
-              username: accountToStake,
-            },
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-        ],
-      };
-    } else {
-      console.log("Not a wcw user");
-      actions = {
-        actions: [
           {
             account: "free.cpu4",
             name: "getcpu",
@@ -270,27 +292,21 @@ const Home = ({ ual }) => {
 
   const transactionDeposit = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      // if (false) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
       actions = {
-        max_cpu_usage_ms: 5,
-        max_net_usage_words: 5000,
         actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: "5 ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
           {
             account: "eosio.token",
             name: "transfer",
@@ -310,9 +326,26 @@ const Home = ({ ual }) => {
         ],
       };
     } else {
-      console.log("Not a wcw user");
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
+        max_cpu_usage_ms: 5,
+        max_net_usage_words: 5000,
         actions: [
+          {
+            account: "limitlesswax",
+            name: "paycpu",
+            data: {
+              user: ual.activeUser.accountName,
+              info: "5 ms max",
+            },
+            authorization: [
+              {
+                actor: "limitlesswax",
+                permission: "cosign",
+              },
+            ],
+          },
           {
             account: "eosio.token",
             name: "transfer",
@@ -356,8 +389,39 @@ const Home = ({ ual }) => {
 
   const transactionUpdateBalance = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
+      actions = {
+        actions: [
+          {
+            account: "cpu4",
+            name: "updatebalance",
+            data: {
+              username: ual.activeUser.accountName,
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+        ],
+      };
+    } else {
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
@@ -376,25 +440,6 @@ const Home = ({ ual }) => {
               },
             ],
           },
-          {
-            account: "cpu4",
-            name: "updatebalance",
-            data: {
-              username: ual.activeUser.accountName,
-            },
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-        ],
-      };
-    } else {
-      console.log("Not a wcw user");
-      actions = {
-        actions: [
           {
             account: "cpu4",
             name: "updatebalance",
@@ -435,9 +480,40 @@ const Home = ({ ual }) => {
 
   const transactionWithdraw = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      // if (false) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
+      actions = {
+        actions: [
+          {
+            account: "cpu4",
+            name: "withdraw",
+            data: {
+              username: ual.activeUser.accountName,
+              amount: parseFloat(amountToSend).toFixed(8) + " WAX",
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+        ],
+      };
+    } else {
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
@@ -456,26 +532,6 @@ const Home = ({ ual }) => {
               },
             ],
           },
-          {
-            account: "cpu4",
-            name: "withdraw",
-            data: {
-              username: ual.activeUser.accountName,
-              amount: parseFloat(amountToSend).toFixed(8) + " WAX",
-            },
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-        ],
-      };
-    } else {
-      console.log("Not a wcw user");
-      actions = {
-        actions: [
           {
             account: "cpu4",
             name: "withdraw",
@@ -517,9 +573,40 @@ const Home = ({ ual }) => {
 
   const transactionTest = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      // if (false) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
+      actions = {
+        actions: [
+          {
+            account: "cpu4",
+            name: "withdraw",
+            data: {
+              username: ual.activeUser.accountName,
+              amount: parseFloat(amountToSend).toFixed(8) + " WAX",
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+        ],
+      };
+    } else {
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
@@ -553,26 +640,6 @@ const Home = ({ ual }) => {
             ],
           },
         ],
-      };
-    } else {
-      console.log("Not a wcw user");
-      actions = {
-        // actions: [
-        //   {
-        //     account: "cpu4",
-        //     name: "withdraw",
-        //     data: {
-        //       username: ual.activeUser.accountName,
-        //       amount: parseFloat(amountToSend).toFixed(8) + " WAX",
-        //     },
-        //     authorization: [
-        //       {
-        //         actor: ual.activeUser.accountName,
-        //         permission: "active",
-        //       },
-        //     ],
-        //   },
-        // ],
       };
     }
 
