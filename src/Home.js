@@ -608,23 +608,23 @@ const Home = ({ ual }) => {
       console.log("Server is up.");
       // include the server signing part
       actions = {
-        max_cpu_usage_ms: 5,
-        max_net_usage_words: 5000,
+        // max_cpu_usage_ms: 5,
+        // max_net_usage_words: 5000,
         actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: "5 ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
+          // {
+          //   account: "limitlesswax",
+          //   name: "paycpu",
+          //   data: {
+          //     user: ual.activeUser.accountName,
+          //     info: "5 ms max",
+          //   },
+          //   authorization: [
+          //     {
+          //       actor: "limitlesswax",
+          //       permission: "cosign",
+          //     },
+          //   ],
+          // },
           {
             account: "cpu4",
             name: "withdraw",
