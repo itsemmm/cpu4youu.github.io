@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { JsonRpc } from "eosjs";
+import { Api, JsonRpc } from "eosjs";
 
 const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
 // const rpc = new JsonRpc("https://testnet.wax.eosdetroit.io", { fetch });
+const { TextDecoder, TextEncoder } = require("util"); //node only
 
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
@@ -583,18 +584,42 @@ const Home = ({ ual }) => {
     });
     console.log(response);
 
-    if (response.status != 200) {
+    var cpu_cost = 0.015;
+    try {
+      const api = new Api({
+        rpc,
+        textDecoder: new TextDecoder(),
+        textEncoder: new TextEncoder(),
+      });
+      const table = await api.rpc.get_table_rows({
+        json: true, // Get the response as json
+        code: "limitlesswax", // Contract that we target
+        scope: "limitlesswax", // Account that owns the data
+        table: "config", // Table name
+        limit: 1, // Maximum number of rows that we want to get
+        reverse: false, // Optional: Get reversed data
+        show_payer: false, // Optional: Show ram payer
+      });
+
+      cpu_cost = parseFloat(table.rows[0].cost);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      console.log(JSON.stringify(e));
+    }
+
+    var d = JSON.parse(data);
+    console.log(d);
+    console.log(d.from);
+    if (buyCPU == false || response.status != 200) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
         actions: [
           {
-            account: "cpu4",
-            name: "withdraw",
-            data: {
-              username: ual.activeUser.accountName,
-              amount: parseFloat(amountToSend).toFixed(8) + " WAX",
-            },
+            account: contract,
+            name: action,
+            data: JSON.parse(data),
             authorization: [
               {
                 actor: ual.activeUser.accountName,
@@ -608,30 +633,44 @@ const Home = ({ ual }) => {
       console.log("Server is up.");
       // include the server signing part
       actions = {
-        // max_cpu_usage_ms: 5,
-        // max_net_usage_words: 5000,
+        max_cpu_usage_ms: ms,
+        max_net_usage_words: ms * 1000,
         actions: [
-          // {
-          //   account: "limitlesswax",
-          //   name: "paycpu",
-          //   data: {
-          //     user: ual.activeUser.accountName,
-          //     info: "5 ms max",
-          //   },
-          //   authorization: [
-          //     {
-          //       actor: "limitlesswax",
-          //       permission: "cosign",
-          //     },
-          //   ],
-          // },
           {
-            account: "cpu4",
-            name: "withdraw",
+            account: "limitlesswax",
+            name: "paycpu",
             data: {
-              username: ual.activeUser.accountName,
-              amount: parseFloat(amountToSend).toFixed(8) + " WAX",
+              user: ual.activeUser.accountName,
+              info: ms + " ms max",
             },
+            authorization: [
+              {
+                actor: "limitlesswax",
+                permission: "cosign",
+              },
+            ],
+          },
+          {
+            account: "eosio.token",
+            name: "transfer",
+            data: {
+              from: ual.activeUser.accountName,
+              to: "limitlesscpu",
+              // quantity: realCost.toFixed(8) + " WAX",
+              quantity: (parseFloat(cpu_cost) * ms).toFixed(8) + " WAX",
+              memo: "Limitlesswax CPU Payment",
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+          {
+            account: contract,
+            name: action,
+            data: JSON.parse(data),
             authorization: [
               {
                 actor: ual.activeUser.accountName,
@@ -642,6 +681,7 @@ const Home = ({ ual }) => {
         ],
       };
     }
+    console.log(actions);
 
     try {
       const r = await ual.activeUser.signTransaction(actions, {
@@ -694,6 +734,14 @@ const Home = ({ ual }) => {
   const [response, setResponse] = useState();
   const [totalWax, setTotalWax] = useState(0);
   const [freeWax, setFreeWax] = useState(0);
+
+  const [contract, setContract] = useState("eosio.token");
+  const [action, setAction] = useState("transfer");
+  const [data, setData] = useState(
+    '{"from": "yourname", "to": "otheruser", "quantity": "1.00000000 WAX", "memo": "" }'
+  );
+  const [buyCPU, setbuyCPU] = useState(true);
+  const [ms, setMS] = useState(1);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -982,7 +1030,13 @@ const Home = ({ ual }) => {
             textAlign: "left",
           }}
         >
-          <tbody>{renderTest()}</tbody>
+          <tbody>
+            {renderContractInput()}
+            {renderContractAction()}
+            {renderContractData()}
+            {renderPayCPU()}
+            {renderMS()}
+          </tbody>
         </table>
       );
     }
@@ -1045,6 +1099,88 @@ const Home = ({ ual }) => {
             onChange={(e) => setAmountToSend(e.target.value)}
           />{" "}
           WAX
+        </td>
+      </tr>
+    );
+  };
+
+  const renderContractInput = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Name of Smart Contract</td>
+        <td>
+          <input
+            style={{ width: "180px" }}
+            type="text"
+            value={contract}
+            onChange={(e) => setContract(e.target.value)}
+          />{" "}
+        </td>
+      </tr>
+    );
+  };
+
+  const renderContractAction = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Action from Smart Contract</td>
+        <td>
+          <input
+            style={{ width: "180px" }}
+            type="text"
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
+          />{" "}
+        </td>
+      </tr>
+    );
+  };
+
+  const renderContractData = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Action Data</td>
+        <td>
+          <input
+            style={{ width: "480px" }}
+            type="text"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+          />{" "}
+        </td>
+      </tr>
+    );
+  };
+
+  const renderPayCPU = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Buy CPU</td>
+        <td>
+          <input
+            style={{ width: "60px" }}
+            type="bool"
+            value={buyCPU}
+            onChange={(e) => setbuyCPU(e.target.value)}
+          />{" "}
+        </td>
+      </tr>
+    );
+  };
+
+  const renderMS = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>
+          How many miliseconds do you need?
+        </td>
+        <td>
+          <input
+            style={{ width: "120px" }}
+            type="number"
+            value={ms}
+            onChange={(e) => setMS(e.target.value)}
+          />{" "}
         </td>
       </tr>
     );
