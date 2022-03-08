@@ -7,9 +7,42 @@ const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
     var actions = {};
-    if (ual.activeAuthenticator.wax) {
-      // if (false) {
-      console.log("Yes a wcw user");
+
+    const response = await fetch("https://api.limitlesswax.co/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    if (response.status != 200) {
+      console.log("Server is down.");
+      // exclude the server signing part
+      actions = {
+        actions: [
+          {
+            account: "eosio.token",
+            name: "transfer",
+            data: {
+              from: ual.activeUser.accountName,
+              to: "cpu4",
+              quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
+              memo: numberOfDaysOption + "",
+            },
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: "active",
+              },
+            ],
+          },
+        ],
+      };
+    } else {
+      console.log("Server is up.");
+      // include the server signing part
       actions = {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
@@ -46,29 +79,8 @@ const Home = ({ ual }) => {
           },
         ],
       };
-    } else {
-      console.log("Not a wcw user");
-      actions = {
-        actions: [
-          {
-            account: "eosio.token",
-            name: "transfer",
-            data: {
-              from: ual.activeUser.accountName,
-              to: "cpu4",
-              quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
-              memo: numberOfDaysOption + "",
-            },
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-        ],
-      };
     }
+
     try {
       const r = await ual.activeUser.signTransaction(actions, {
         blocksBehind: 5,
