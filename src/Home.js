@@ -8,17 +8,55 @@ const { TextDecoder, TextEncoder } = require("util"); //node only
 const Home = ({ ual }) => {
   const transactionStakeToSelf = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
 
-    if (response.status != 200) {
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
+
+    if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
@@ -105,17 +143,55 @@ const Home = ({ ual }) => {
 
   const transactionStakeToUser = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
 
-    if (response.status != 200) {
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
+
+    if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
@@ -202,17 +278,55 @@ const Home = ({ ual }) => {
 
   const transactionFreeCPU = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
 
-    if (response.status != 200) {
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
+
+    if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
@@ -293,17 +407,55 @@ const Home = ({ ual }) => {
 
   const transactionDeposit = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
 
-    if (response.status != 200) {
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
+
+    if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
@@ -390,17 +542,55 @@ const Home = ({ ual }) => {
 
   const transactionUpdateBalance = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
 
-    if (response.status != 200) {
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
+
+    if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
@@ -481,17 +671,55 @@ const Home = ({ ual }) => {
 
   const transactionWithdraw = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
 
-    if (response.status != 200) {
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
+
+    if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
@@ -574,15 +802,53 @@ const Home = ({ ual }) => {
 
   const transactionTest = async () => {
     var actions = {};
+    var response = {};
+    try {
+      response = await fetch("https://api.limitlesswax.co/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      response.status = 400;
+    }
 
-    const response = await fetch("https://api.limitlesswax.co/", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    var enough_cpu = false;
+    try {
+      var account_info = await fetch(
+        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      var account_info_json = await account_info.json();
+      console.log(account_info_json.account.cpu_limit);
+
+      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
+        console.log("Enough cpu left");
+        enough_cpu = true;
+      } else {
+        console.log("Not enough cpu");
+        enough_cpu = false;
+      }
+    } catch (e) {
+      console.error(e);
+      // process.exit();
+      // alert(e);
+      console.log(JSON.stringify(e));
+      enough_cpu = false;
+    }
 
     var cpu_cost = 0.015;
     try {
@@ -611,7 +877,7 @@ const Home = ({ ual }) => {
     var d = JSON.parse(data);
     console.log(d);
     console.log(d.from);
-    if (buyCPU == false || response.status != 200) {
+    if (buyCPU == false || response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
       actions = {
