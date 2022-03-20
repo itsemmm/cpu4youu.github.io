@@ -29,7 +29,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -164,7 +164,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -299,7 +299,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -428,7 +428,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -563,7 +563,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -692,7 +692,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -823,7 +823,7 @@ const Home = ({ ual }) => {
     var enough_cpu = false;
     try {
       var account_info = await fetch(
-        "https://wax.eosusa.news/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+        "http://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
         {
           method: "GET",
           headers: {
@@ -877,6 +877,7 @@ const Home = ({ ual }) => {
     var d = JSON.parse(data);
     console.log(d);
     console.log(d.from);
+    console.log("buy cpu: ", buyCPU);
     if (buyCPU == false || response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
