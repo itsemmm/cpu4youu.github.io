@@ -485,20 +485,20 @@ const Home = ({ ual }) => {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
         actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: "5 ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
+          // {
+          //   account: "limitlesswax",
+          //   name: "paycpu",
+          //   data: {
+          //     user: ual.activeUser.accountName,
+          //     info: "5 ms max",
+          //   },
+          //   authorization: [
+          //     {
+          //       actor: "limitlesswax",
+          //       permission: "cosign",
+          //     },
+          //   ],
+          // },
           {
             account: "eosio.token",
             name: "transfer",
