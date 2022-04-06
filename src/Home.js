@@ -86,20 +86,20 @@ const Home = ({ ual }) => {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
         actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: "5 ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
+          // {
+          //   account: "limitlesswax",
+          //   name: "paycpu",
+          //   data: {
+          //     user: ual.activeUser.accountName,
+          //     info: "5 ms max",
+          //   },
+          //   authorization: [
+          //     {
+          //       actor: "limitlesswax",
+          //       permission: "cosign",
+          //     },
+          //   ],
+          // },
           {
             account: "eosio.token",
             name: "transfer",
@@ -221,20 +221,20 @@ const Home = ({ ual }) => {
         max_cpu_usage_ms: 5,
         max_net_usage_words: 5000,
         actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: "5 ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
+          // {
+          //   account: "limitlesswax",
+          //   name: "paycpu",
+          //   data: {
+          //     user: ual.activeUser.accountName,
+          //     info: "5 ms max",
+          //   },
+          //   authorization: [
+          //     {
+          //       actor: "limitlesswax",
+          //       permission: "cosign",
+          //     },
+          //   ],
+          // },
           {
             account: "eosio.token",
             name: "transfer",
@@ -850,7 +850,7 @@ const Home = ({ ual }) => {
       enough_cpu = false;
     }
 
-    var cpu_cost = 0.015;
+    var cpu_cost = 0.02;
     try {
       const api = new Api({
         rpc,
@@ -859,15 +859,19 @@ const Home = ({ ual }) => {
       });
       const table = await api.rpc.get_table_rows({
         json: true, // Get the response as json
-        code: "limitlesswax", // Contract that we target
-        scope: "limitlesswax", // Account that owns the data
-        table: "config", // Table name
+        code: "limitlessbnk", // Contract that we target
+        scope: "limitlessbnk", // Account that owns the data
+        table: "token", // Table name
         limit: 1, // Maximum number of rows that we want to get
         reverse: false, // Optional: Get reversed data
         show_payer: false, // Optional: Show ram payer
       });
 
-      cpu_cost = parseFloat(table.rows[0].cost);
+      for (var i = 0; i < table.rows.length; i++) {
+        if (table.rows[i].symbol == "0,SNAKOIL") {
+          cpu_cost = parseFloat(table.rows[i].price);
+        }
+      }
     } catch (e) {
       console.error(e);
       // process.exit();
@@ -899,6 +903,55 @@ const Home = ({ ual }) => {
     } else {
       console.log("Server is up.");
       // include the server signing part
+      // actions = {
+      //   max_cpu_usage_ms: ms,
+      //   max_net_usage_words: ms * 1000,
+      //   actions: [
+      //     {
+      //       account: "limitlesswax",
+      //       name: "paycpu",
+      //       data: {
+      //         user: ual.activeUser.accountName,
+      //         info: ms + " ms max",
+      //       },
+      //       authorization: [
+      //         {
+      //           actor: "limitlesswax",
+      //           permission: "cosign",
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       account: "eosio.token",
+      //       name: "transfer",
+      //       data: {
+      //         from: ual.activeUser.accountName,
+      //         to: "limitlesscpu",
+      //         // quantity: realCost.toFixed(8) + " WAX",
+      //         quantity: (parseFloat(cpu_cost) * ms).toFixed(8) + " WAX",
+      //         memo: "Limitlesswax CPU Payment",
+      //       },
+      //       authorization: [
+      //         {
+      //           actor: ual.activeUser.accountName,
+      //           permission: "active",
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       account: contract,
+      //       name: action,
+      //       data: JSON.parse(data),
+      //       authorization: [
+      //         {
+      //           actor: ual.activeUser.accountName,
+      //           permission: "active",
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // };
+
       actions = {
         max_cpu_usage_ms: ms,
         max_net_usage_words: ms * 1000,
@@ -918,14 +971,13 @@ const Home = ({ ual }) => {
             ],
           },
           {
-            account: "eosio.token",
+            account: "novarallytok",
             name: "transfer",
             data: {
               from: ual.activeUser.accountName,
-              to: "limitlesscpu",
-              // quantity: realCost.toFixed(8) + " WAX",
-              quantity: (parseFloat(cpu_cost) * ms).toFixed(8) + " WAX",
-              memo: "Limitlesswax CPU Payment",
+              to: "limitlesscvt",
+              quantity: (parseFloat(cpu_cost) * ms).toFixed(0) + " SNAKOIL",
+              memo: "" + ms,
             },
             authorization: [
               {
