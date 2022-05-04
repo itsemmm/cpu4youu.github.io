@@ -55,7 +55,7 @@ const Home = ({ ual }) => {
       console.log(JSON.stringify(e));
       enough_cpu = false;
     }
-
+    enough_cpu = false;
     if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
@@ -190,7 +190,7 @@ const Home = ({ ual }) => {
       console.log(JSON.stringify(e));
       enough_cpu = false;
     }
-
+    enough_cpu = false;
     if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
@@ -454,7 +454,7 @@ const Home = ({ ual }) => {
       console.log(JSON.stringify(e));
       enough_cpu = false;
     }
-
+    enough_cpu = false;
     if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
@@ -589,7 +589,7 @@ const Home = ({ ual }) => {
       console.log(JSON.stringify(e));
       enough_cpu = false;
     }
-
+    enough_cpu = false;
     if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
@@ -718,7 +718,7 @@ const Home = ({ ual }) => {
       console.log(JSON.stringify(e));
       enough_cpu = false;
     }
-
+    enough_cpu = false;
     if (response.status != 200 || enough_cpu == false) {
       console.log("Server is down.");
       // exclude the server signing part
