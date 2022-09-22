@@ -1126,9 +1126,9 @@ const Home = ({ ual }) => {
           setFreeWax(tw - cl + " WAX");
 
           if (amountToSend && amountToSend > 0) {
-            var multiplier = Math.pow(1.0 - cl / tw, ex) * 300;
-            if (multiplier < 20) {
-              multiplier = 20;
+            var multiplier = Math.pow(1.0 - cl / tw, ex) * 850;
+            if (multiplier < 200) {
+              multiplier = 200;
             }
             var total =
               multiplier *
