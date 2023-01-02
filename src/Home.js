@@ -1057,7 +1057,7 @@ const Home = ({ ual }) => {
         }
       }
     };
-    // run();
+    run();
   }, [ual.activeUser]);
 
   const openLoginModal = () => {
