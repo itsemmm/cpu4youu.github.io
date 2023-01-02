@@ -801,222 +801,103 @@ const Home = ({ ual }) => {
   };
 
   const transactionTest = async () => {
-    var actions = {};
-    var response = {};
-    try {
-      response = await fetch("https://api.limitlesswax.co/", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response);
-    } catch (e) {
-      console.error(e);
-      // process.exit();
-      // alert(e);
-      console.log(JSON.stringify(e));
-      response.status = 400;
-    }
+    // const [landToBoost, setLandToBoost] = useState("");
+    // const [amountToBoost, setAmountToBoost] = useState(3);
+    // const [numTimesToBoost, setNumTimesToBoost] = useState(1);
 
-    var enough_cpu = false;
-    try {
-      var account_info = await fetch(
-        "https://api.wax.greeneosio.com/v2/state/get_account?limit=1&skip=0&account=limitlesswax",
+    var action_format_one = {
+      account: "alien.worlds",
+      name: "transfer",
+      data: {
+        from: ual.activeUser.accountName,
+        to: "boost.worlds",
+        quantity: parseFloat(amountToBoost).toFixed(4) + " TLM",
+        memo: "landrating - boostslot for " + landToBoost,
+      },
+      authorization: [
         {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      var account_info_json = await account_info.json();
-      console.log(account_info_json.account.cpu_limit);
+          actor: ual.activeUser.accountName,
+          permission: "active",
+        },
+      ],
+    };
 
-      if (parseInt(account_info_json.account.cpu_limit.available) > 5000) {
-        console.log("Enough cpu left");
-        enough_cpu = true;
-      } else {
-        console.log("Not enough cpu");
-        enough_cpu = false;
-      }
-    } catch (e) {
-      console.error(e);
-      // process.exit();
-      // alert(e);
-      console.log(JSON.stringify(e));
-      enough_cpu = false;
+    var action_format_two = {
+      account: "awlndratings",
+      name: "boost",
+      data: {
+        amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
+        land_id: landToBoost,
+        payer: ual.activeUser.accountName
+      },
+      authorization: [
+        {
+          actor: ual.activeUser.accountName,
+          permission: "active",
+        },
+      ],
+    };
+
+    var action_format_three = [
+    {
+      account: "alien.worlds",
+      name: "transfer",
+      data: {
+        from: ual.activeUser.accountName,
+        to: "boost.worlds",
+        quantity: parseFloat(amountToBoost).toFixed(4) + " TLM",
+        memo: "landrating - boostslot for " + landToBoost,
+      },
+      authorization: [
+        {
+          actor: ual.activeUser.accountName,
+          permission: "active",
+        },
+      ],
+    },
+    {
+      account: "awlndratings",
+      name: "boost",
+      data: {
+        amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
+        land_id: landToBoost,
+        payer: ual.activeUser.accountName
+      },
+      authorization: [
+        {
+          actor: ual.activeUser.accountName,
+          permission: "active",
+        },
+      ],
+    }];
+    var all_actions = [];
+    for (var i = 0; i < parseInt(numTimesToBoost); i++) {
+      var clone = JSON.parse(JSON.stringify(action_format_one));
+      var clone_two = JSON.parse(JSON.stringify(action_format_two));
+      all_actions.push(clone);
+      all_actions.push(clone_two);
     }
+    
 
-    var cpu_cost = 0.02;
-    try {
-      const api = new Api({
-        rpc,
-        textDecoder: new TextDecoder(),
-        textEncoder: new TextEncoder(),
-      });
-      const table = await api.rpc.get_table_rows({
-        json: true, // Get the response as json
-        code: "limitlessbnk", // Contract that we target
-        scope: "limitlessbnk", // Account that owns the data
-        table: "token", // Table name
-        limit: 1, // Maximum number of rows that we want to get
-        reverse: false, // Optional: Get reversed data
-        show_payer: false, // Optional: Show ram payer
-      });
-
-      for (var i = 0; i < table.rows.length; i++) {
-        if (table.rows[i].symbol == "0,SNAKOIL") {
-          cpu_cost = parseFloat(table.rows[i].price);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-      // process.exit();
-      console.log(JSON.stringify(e));
-    }
-
-    var d = JSON.parse(data);
-    console.log(d);
-    console.log(d.from);
-    console.log("buy cpu: ", buyCPU);
-    if (buyCPU == false || response.status != 200 || enough_cpu == false) {
-      console.log("Server is down.");
-      // exclude the server signing part
-      actions = {
-        actions: [
-          {
-            account: contract,
-            name: action,
-            data: JSON.parse(data),
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-        ],
-      };
-    } else {
-      console.log("Server is up.");
-      // include the server signing part
-      // actions = {
-      //   max_cpu_usage_ms: ms,
-      //   max_net_usage_words: ms * 1000,
-      //   actions: [
-      //     {
-      //       account: "limitlesswax",
-      //       name: "paycpu",
-      //       data: {
-      //         user: ual.activeUser.accountName,
-      //         info: ms + " ms max",
-      //       },
-      //       authorization: [
-      //         {
-      //           actor: "limitlesswax",
-      //           permission: "cosign",
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       account: "eosio.token",
-      //       name: "transfer",
-      //       data: {
-      //         from: ual.activeUser.accountName,
-      //         to: "limitlesscpu",
-      //         // quantity: realCost.toFixed(8) + " WAX",
-      //         quantity: (parseFloat(cpu_cost) * ms).toFixed(8) + " WAX",
-      //         memo: "Limitlesswax CPU Payment",
-      //       },
-      //       authorization: [
-      //         {
-      //           actor: ual.activeUser.accountName,
-      //           permission: "active",
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       account: contract,
-      //       name: action,
-      //       data: JSON.parse(data),
-      //       authorization: [
-      //         {
-      //           actor: ual.activeUser.accountName,
-      //           permission: "active",
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // };
-
-      actions = {
-        max_cpu_usage_ms: ms,
-        max_net_usage_words: ms * 1000,
-        actions: [
-          {
-            account: "limitlesswax",
-            name: "paycpu",
-            data: {
-              user: ual.activeUser.accountName,
-              info: ms + " ms max",
-            },
-            authorization: [
-              {
-                actor: "limitlesswax",
-                permission: "cosign",
-              },
-            ],
-          },
-          {
-            account: "novarallytok",
-            name: "transfer",
-            data: {
-              from: ual.activeUser.accountName,
-              to: "limitlesscvt",
-              quantity: (parseFloat(cpu_cost) * ms).toFixed(0) + " SNAKOIL",
-              memo: "" + ms,
-            },
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-          {
-            account: contract,
-            name: action,
-            data: JSON.parse(data),
-            authorization: [
-              {
-                actor: ual.activeUser.accountName,
-                permission: "active",
-              },
-            ],
-          },
-        ],
-      };
-    }
-    console.log(actions);
+    console.log("TESTING TESTING", landToBoost);
+    console.log("TESTING TESTING", amountToBoost);
+    console.log("TESTING TESTING", numTimesToBoost);
+    console.log("TESTING TESTING", all_actions);
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await ual.activeUser.signTransaction({actions: all_actions}, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
-      console.log(r);
+      console.log("TESTER TESTER: ", r);
       alert("Transaction ID: " + r.transactionId);
-      setNumberOfDaysOptions(3);
-      setAmountToBeStaked(0);
-      setAmountToSend(1);
-      setAccountToStake("");
+      setLandToBoost("");
+      setAmountToBoost(4);
+      setNumTimesToBoost(1);
     } catch (e) {
-      console.error(e);
+      console.log(e);
       // process.exit();
       alert(e);
       console.log(JSON.stringify(e));
@@ -1061,6 +942,10 @@ const Home = ({ ual }) => {
   );
   const [buyCPU, setbuyCPU] = useState(true);
   const [ms, setMS] = useState(1);
+
+  const [landToBoost, setLandToBoost] = useState("");
+  const [amountToBoost, setAmountToBoost] = useState(4);
+  const [numTimesToBoost, setNumTimesToBoost] = useState(1);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -1115,7 +1000,7 @@ const Home = ({ ual }) => {
       if (response) {
         try {
           const table = response.r1;
-          console.log(table["rows"][0]);
+          // console.log(table["rows"][0]);
 
           const ex = parseFloat(table["rows"][0].exponent);
           const tw = parseFloat(table["rows"][0].total_wax);
@@ -1134,7 +1019,7 @@ const Home = ({ ual }) => {
               multiplier *
               (1 - mdf * (numberOfDaysOption - 1)) *
               (amountToSend / numberOfDaysOption);
-            console.log(total);
+            // console.log(total);
             setAmountToBeStaked(total);
           } else {
             setAmountToBeStaked(0);
@@ -1172,7 +1057,7 @@ const Home = ({ ual }) => {
         }
       }
     };
-    run();
+    // run();
   }, [ual.activeUser]);
 
   const openLoginModal = () => {
@@ -1350,11 +1235,9 @@ const Home = ({ ual }) => {
           }}
         >
           <tbody>
-            {renderContractInput()}
-            {renderContractAction()}
-            {renderContractData()}
-            {renderPayCPU()}
-            {renderMS()}
+            {renderBoostInput()}
+            {renderAmountToBoost()}
+            {renderTimesToBoost()}
           </tbody>
         </table>
       );
@@ -1422,6 +1305,74 @@ const Home = ({ ual }) => {
       </tr>
     );
   };
+
+  const renderBoostInput = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Name of Land to Boost</td>
+        <td>
+          <input
+            style={{ width: "180px" }}
+            type="text"
+            value={landToBoost}
+            onChange={(e) => setLandToBoost(e.target.value)}
+          />{" "}
+        </td>
+      </tr>
+    );
+  };
+
+  const renderAmountToBoost = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Amount to Boost Land</td>
+        <td>
+          <select
+            value={amountToBoost}
+            onChange={(e) => setAmountToBoost(e.target.value)}
+          >
+            <option value={4}>4</option>
+            <option value={8}>8</option>
+            <option value={16}>16</option>
+            <option value={32}>32</option>
+            <option value={64}>64</option>
+          </select>
+        </td>
+      </tr>
+    );
+  };
+
+  const renderTimesToBoost = () => {
+    return (
+      <tr>
+        <td style={{ textAlign: "right" }}>Times to Boost Land</td>
+        <td>
+          <select
+            value={numTimesToBoost}
+            onChange={(e) => setNumTimesToBoost(e.target.value)}
+          >
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
+            <option value={5}>5</option>
+            <option value={6}>6</option>
+            <option value={7}>7</option>
+            <option value={8}>8</option>
+            <option value={9}>9</option>
+            <option value={10}>10</option>
+            <option value={11}>11</option>
+            <option value={12}>12</option>
+            <option value={13}>13</option>
+            <option value={14}>14</option>
+            <option value={15}>15</option>
+          </select>
+        </td>
+      </tr>
+    );
+  };
+
+
 
   const renderContractInput = () => {
     return (
