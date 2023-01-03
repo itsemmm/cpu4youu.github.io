@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Api, JsonRpc } from "eosjs";
 
-const rpc = new JsonRpc("https://wax.greymass.com", { fetch });
+const rpc = new JsonRpc("https://api.waxsweden.org", { fetch });
 // const rpc = new JsonRpc("https://testnet.wax.eosdetroit.io", { fetch });
 const { TextDecoder, TextEncoder } = require("util"); //node only
 
