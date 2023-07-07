@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Api, JsonRpc } from "eosjs";
+import * as waxjs from "@waxio/waxjs/dist";
 
 const rpc = new JsonRpc("https://api.waxsweden.org", { fetch });
 // const rpc = new JsonRpc("https://testnet.wax.eosdetroit.io", { fetch });
 const { TextDecoder, TextEncoder } = require("util"); //node only
 
-const Home = ({ ual }) => {
+const Home = () => {
   const transactionStakeToSelf = async () => {
+    await checkLogin()
+    console.log("wallet:", wallet);
     var actions = {};
     var response = {};
     try {
@@ -65,14 +68,14 @@ const Home = ({ ual }) => {
             account: "eosio.token",
             name: "transfer",
             data: {
-              from: ual.activeUser.accountName,
+              from: wallet.name,
               to: "cpu4",
               quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
               memo: numberOfDaysOption + "",
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -104,14 +107,14 @@ const Home = ({ ual }) => {
             account: "eosio.token",
             name: "transfer",
             data: {
-              from: ual.activeUser.accountName,
+              from: wallet.name,
               to: "cpu4",
               quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
               memo: numberOfDaysOption + "",
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -121,14 +124,14 @@ const Home = ({ ual }) => {
     }
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await transaction(actions, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log(r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
       setAmountToSend(1);
@@ -142,6 +145,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionStakeToUser = async () => {
+    await checkLogin()
     var actions = {};
     var response = {};
     try {
@@ -200,14 +204,14 @@ const Home = ({ ual }) => {
             account: "eosio.token",
             name: "transfer",
             data: {
-              from: ual.activeUser.accountName,
+              from: wallet.name,
               to: "cpu4",
               quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
               memo: "USER:" + accountToStake + "," + numberOfDaysOption,
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -239,14 +243,14 @@ const Home = ({ ual }) => {
             account: "eosio.token",
             name: "transfer",
             data: {
-              from: ual.activeUser.accountName,
+              from: wallet.name,
               to: "cpu4",
               quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
               memo: "USER:" + accountToStake + "," + numberOfDaysOption,
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -256,14 +260,14 @@ const Home = ({ ual }) => {
     }
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await transaction(actions, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log(r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
       setAmountToSend(1);
@@ -277,6 +281,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionFreeCPU = async () => {
+    await checkLogin()
     var actions = {};
     var response = {};
     try {
@@ -339,7 +344,7 @@ const Home = ({ ual }) => {
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -357,7 +362,7 @@ const Home = ({ ual }) => {
             account: "limitlesswax",
             name: "paycpu",
             data: {
-              user: ual.activeUser.accountName,
+              user: wallet.name,
               info: "5 ms max",
             },
             authorization: [
@@ -375,7 +380,7 @@ const Home = ({ ual }) => {
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -385,14 +390,14 @@ const Home = ({ ual }) => {
     }
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await transaction(actions, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log(r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
       setAmountToSend(1);
@@ -406,6 +411,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionDeposit = async () => {
+    await checkLogin()
     var actions = {};
     var response = {};
     try {
@@ -464,14 +470,14 @@ const Home = ({ ual }) => {
             account: "eosio.token",
             name: "transfer",
             data: {
-              from: ual.activeUser.accountName,
+              from: wallet.name,
               to: "cpu4",
               quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
               memo: "Deposit",
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -503,14 +509,14 @@ const Home = ({ ual }) => {
             account: "eosio.token",
             name: "transfer",
             data: {
-              from: ual.activeUser.accountName,
+              from: wallet.name,
               to: "cpu4",
               quantity: parseFloat(amountToSend).toFixed(8) + " WAX",
               memo: "Deposit",
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -520,14 +526,14 @@ const Home = ({ ual }) => {
     }
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await transaction(actions, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log(r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
       setAmountToSend(1);
@@ -541,6 +547,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionUpdateBalance = async () => {
+    await checkLogin()
     var actions = {};
     var response = {};
     try {
@@ -599,11 +606,11 @@ const Home = ({ ual }) => {
             account: "cpu4",
             name: "updatebalance",
             data: {
-              username: ual.activeUser.accountName,
+              username: wallet.name,
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -621,7 +628,7 @@ const Home = ({ ual }) => {
             account: "limitlesswax",
             name: "paycpu",
             data: {
-              user: ual.activeUser.accountName,
+              user: wallet.name,
               info: "5 ms max",
             },
             authorization: [
@@ -635,11 +642,11 @@ const Home = ({ ual }) => {
             account: "cpu4",
             name: "updatebalance",
             data: {
-              username: ual.activeUser.accountName,
+              username: wallet.name,
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -649,14 +656,14 @@ const Home = ({ ual }) => {
     }
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await transaction(actions, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log(r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
       setAmountToSend(1);
@@ -670,6 +677,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionWithdraw = async () => {
+    await checkLogin()
     var actions = {};
     var response = {};
     try {
@@ -728,12 +736,12 @@ const Home = ({ ual }) => {
             account: "cpu4",
             name: "withdraw",
             data: {
-              username: ual.activeUser.accountName,
+              username: wallet.name,
               amount: parseFloat(amountToSend).toFixed(8) + " WAX",
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -751,7 +759,7 @@ const Home = ({ ual }) => {
             account: "limitlesswax",
             name: "paycpu",
             data: {
-              user: ual.activeUser.accountName,
+              user: wallet.name,
               info: "5 ms max",
             },
             authorization: [
@@ -765,12 +773,12 @@ const Home = ({ ual }) => {
             account: "cpu4",
             name: "withdraw",
             data: {
-              username: ual.activeUser.accountName,
+              username: wallet.name,
               amount: parseFloat(amountToSend).toFixed(8) + " WAX",
             },
             authorization: [
               {
-                actor: ual.activeUser.accountName,
+                actor: wallet.name,
                 permission: "active",
               },
             ],
@@ -780,14 +788,14 @@ const Home = ({ ual }) => {
     }
 
     try {
-      const r = await ual.activeUser.signTransaction(actions, {
+      const r = await transaction(actions, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log(r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
       setAmountToSend(1);
@@ -801,6 +809,7 @@ const Home = ({ ual }) => {
   };
 
   const transactionTest = async () => {
+    await checkLogin()
     // const [landToBoost, setLandToBoost] = useState("");
     // const [amountToBoost, setAmountToBoost] = useState(3);
     // const [numTimesToBoost, setNumTimesToBoost] = useState(1);
@@ -809,14 +818,14 @@ const Home = ({ ual }) => {
       account: "alien.worlds",
       name: "transfer",
       data: {
-        from: ual.activeUser.accountName,
+        from: wallet.name,
         to: "boost.worlds",
         quantity: parseFloat(amountToBoost).toFixed(4) + " TLM",
         memo: "landrating - boostslot for " + landToBoost,
       },
       authorization: [
         {
-          actor: ual.activeUser.accountName,
+          actor: wallet.name,
           permission: "active",
         },
       ],
@@ -828,11 +837,11 @@ const Home = ({ ual }) => {
       data: {
         amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
         land_id: landToBoost,
-        payer: ual.activeUser.accountName
+        payer: wallet.name
       },
       authorization: [
         {
-          actor: ual.activeUser.accountName,
+          actor: wallet.name,
           permission: "active",
         },
       ],
@@ -843,14 +852,14 @@ const Home = ({ ual }) => {
       account: "alien.worlds",
       name: "transfer",
       data: {
-        from: ual.activeUser.accountName,
+        from: wallet.name,
         to: "boost.worlds",
         quantity: parseFloat(amountToBoost).toFixed(4) + " TLM",
         memo: "landrating - boostslot for " + landToBoost,
       },
       authorization: [
         {
-          actor: ual.activeUser.accountName,
+          actor: wallet.name,
           permission: "active",
         },
       ],
@@ -861,11 +870,11 @@ const Home = ({ ual }) => {
       data: {
         amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
         land_id: landToBoost,
-        payer: ual.activeUser.accountName
+        payer: wallet.name
       },
       authorization: [
         {
-          actor: ual.activeUser.accountName,
+          actor: wallet.name,
           permission: "active",
         },
       ],
@@ -885,14 +894,14 @@ const Home = ({ ual }) => {
     console.log("TESTING TESTING", all_actions);
 
     try {
-      const r = await ual.activeUser.signTransaction({actions: all_actions}, {
+      const r = await transaction({actions: all_actions}, {
         blocksBehind: 5,
         expireSeconds: 300,
         broadcast: true,
         sign: true,
       });
       console.log("TESTER TESTER: ", r);
-      alert("Transaction ID: " + r.transactionId);
+      alert("Transaction ID: " + r.transaction_id);
       setLandToBoost("");
       setAmountToBoost(4);
       setNumTimesToBoost(1);
@@ -1045,9 +1054,9 @@ const Home = ({ ual }) => {
 
   useEffect(() => {
     const run = async () => {
-      if (ual.activeUser) {
+      if (wallet) {
         try {
-          const acc = await rpc.get_account(ual.activeUser.accountName);
+          const acc = await rpc.get_account(wallet.name);
           setAccount(acc);
           getFirstApiCall();
         } catch (e) {
@@ -1058,39 +1067,21 @@ const Home = ({ ual }) => {
       }
     };
     run();
-  }, [ual.activeUser]);
-
-  const openLoginModal = () => {
-    if (!ual.activeUser) {
-      ual.showModal();
-    }
-  };
+  }, [wallet]);
 
   const renderLoginButton = () => {
     return (
       <div>
-        <button onClick={openLoginModal}>Login</button>
+        <button onClick={() => {Login()}}>Login</button>
         <br />
       </div>
     );
   };
 
-  const renderLogoutButton = () => {
-    if (!!ual.activeUser && !!ual.activeAuthenticator) {
-      return (
-        <div>
-          <br />
-          <button onClick={ual.logout}>Logout</button>
-          <br />
-        </div>
-      );
-    }
-  };
-
   const renderNameAndBalance = () => {
-    return ual.activeUser && account ? (
+    return wallet.name && account ? (
       <div>
-        {ual.activeUser.accountName} <br />
+        {wallet.name} <br />
         Current Balance: {account.core_liquid_balance}
         <br />
       </div>
@@ -1098,7 +1089,7 @@ const Home = ({ ual }) => {
   };
 
   const depositedWax = () => {
-    return ual.activeUser && account ? (
+    return wallet.name && account ? (
       <div>
         Deposited: {currentBalance}
         <br />
@@ -1745,15 +1736,131 @@ const Home = ({ ual }) => {
   return (
     <div>
       <h1>CPU 4 SALE</h1>
-      {ual.activeUser ? renderNameAndBalance() : null}
-      {ual.activeUser ? depositedWax() : null}
+      {wallet.name ? renderNameAndBalance() : null}
+      {wallet.name ? depositedWax() : null}
       {waxSupply()}
-      {ual.activeUser ? renderLogoutButton() : renderLoginButton()}
-      {ual.activeUser ? renderSelectSendOption() : null}
+      {wallet.name !== undefined}
+      {wallet.name ? renderSelectSendOption() : null}
       <br />
       {renderFaq()}
     </div>
   );
 };
+
+
+class WCWWallet {
+  name = 'tempname'
+  wax = null
+
+  constructor() {
+    const wax = new waxjs.WaxJS({ rpcEndpoint: 'https://wax.greymass.com', tryAutoLogin: false })
+    wax.rpc = new JsonRpc("https://wax.greymass.com", {
+      fetch
+    })
+    this.wax = wax
+  }
+
+  async checkLogin() {
+    const isAutoLoginAvailable = await this.wax.isAutoLoginAvailable()
+    console.log('check wax autoLogin', isAutoLoginAvailable)
+
+    if (isAutoLoginAvailable) {
+      console.log('wcw auto logined')
+      this.name = this.wax.user.account
+      return {
+        chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4', 
+        name: this.wax.user.account,
+        authorization: {
+          actor: this.wax.user.account, permission: 'active'
+        }
+      }
+    } else {
+      return null
+    }
+  }
+
+  async login() {
+    const userAccount = await this.wax.login()
+    console.log("this.wax.user.account", this.wax.user.account);
+    this.name = this.wax.user.account
+    return {
+      chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
+      name: this.wax.user.account,
+      authorization: {
+        actor: this.wax.user.account, permission: 'active'
+      }
+    }
+  }
+
+  async logout() {
+    this.wax = new waxjs.WaxJS({ rpcEndpoint: 'https://wax.greymass.com', tryAutoLogin: false })
+    return {}
+  }
+
+  async transact(packed) {
+    console.log(packed)
+    try{
+      const trans = await this.wax.api.transact(
+        packed, {
+        blocksBehind: 3,
+        expireSeconds: 1200,
+      })
+      return trans
+    } catch(e){
+      
+      alert(e)
+    }
+    
+  }
+
+  async fetchTable(packed){
+    try{
+      console.log(packed)
+      const response = this.wax.rpc.get_table_rows(packed);
+       return response
+    } catch (e) {
+      console.log(e)
+      return {}
+    }
+  }
+}
+
+const wallet = new WCWWallet
+
+async function Login() {
+  try {
+      const logined = await wallet.login()
+      if(logined){
+          return logined
+      }
+      return {}
+  } catch(e) {
+      console.log(e)
+  }
+}
+
+async function checkLogin() {
+  try{
+      const autoLogined = await wallet.checkLogin()
+      if(autoLogined != null){
+          return autoLogined
+      } 
+      return {}
+  }catch(e){
+      console.log(e)
+  }
+}
+ 
+async function fetchTable(packed){
+  const x = await wallet.fetchTable(packed)
+  return x
+}
+
+export async function transaction(packed){
+await Login()
+const x = await wallet.transact(packed)
+return x
+}
+
 
 export default Home;
