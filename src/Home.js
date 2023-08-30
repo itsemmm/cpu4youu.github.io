@@ -8,7 +8,7 @@ const { TextDecoder, TextEncoder } = require("util"); //node only
 
 const Home = () => {
   const transactionStakeToSelf = async () => {
-    await checkLogin()
+    await checkLogin();
     console.log("wallet:", wallet);
     var actions = {};
     var response = {};
@@ -145,7 +145,7 @@ const Home = () => {
   };
 
   const transactionStakeToUser = async () => {
-    await checkLogin()
+    await checkLogin();
     var actions = {};
     var response = {};
     try {
@@ -281,7 +281,7 @@ const Home = () => {
   };
 
   const transactionFreeCPU = async () => {
-    await checkLogin()
+    await checkLogin();
     var actions = {};
     var response = {};
     try {
@@ -411,7 +411,7 @@ const Home = () => {
   };
 
   const transactionDeposit = async () => {
-    await checkLogin()
+    await checkLogin();
     var actions = {};
     var response = {};
     try {
@@ -547,7 +547,7 @@ const Home = () => {
   };
 
   const transactionUpdateBalance = async () => {
-    await checkLogin()
+    await checkLogin();
     var actions = {};
     var response = {};
     try {
@@ -677,7 +677,7 @@ const Home = () => {
   };
 
   const transactionWithdraw = async () => {
-    await checkLogin()
+    await checkLogin();
     var actions = {};
     var response = {};
     try {
@@ -809,7 +809,7 @@ const Home = () => {
   };
 
   const transactionTest = async () => {
-    await checkLogin()
+    await checkLogin();
     // const [landToBoost, setLandToBoost] = useState("");
     // const [amountToBoost, setAmountToBoost] = useState(3);
     // const [numTimesToBoost, setNumTimesToBoost] = useState(1);
@@ -837,7 +837,7 @@ const Home = () => {
       data: {
         amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
         land_id: landToBoost,
-        payer: wallet.name
+        payer: wallet.name,
       },
       authorization: [
         {
@@ -848,37 +848,38 @@ const Home = () => {
     };
 
     var action_format_three = [
-    {
-      account: "alien.worlds",
-      name: "transfer",
-      data: {
-        from: wallet.name,
-        to: "boost.worlds",
-        quantity: parseFloat(amountToBoost).toFixed(4) + " TLM",
-        memo: "landrating - boostslot for " + landToBoost,
-      },
-      authorization: [
-        {
-          actor: wallet.name,
-          permission: "active",
+      {
+        account: "alien.worlds",
+        name: "transfer",
+        data: {
+          from: wallet.name,
+          to: "boost.worlds",
+          quantity: parseFloat(amountToBoost).toFixed(4) + " TLM",
+          memo: "landrating - boostslot for " + landToBoost,
         },
-      ],
-    },
-    {
-      account: "awlndratings",
-      name: "boost",
-      data: {
-        amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
-        land_id: landToBoost,
-        payer: wallet.name
+        authorization: [
+          {
+            actor: wallet.name,
+            permission: "active",
+          },
+        ],
       },
-      authorization: [
-        {
-          actor: wallet.name,
-          permission: "active",
+      {
+        account: "awlndratings",
+        name: "boost",
+        data: {
+          amount: parseFloat(amountToBoost).toFixed(4) + " TLM",
+          land_id: landToBoost,
+          payer: wallet.name,
         },
-      ],
-    }];
+        authorization: [
+          {
+            actor: wallet.name,
+            permission: "active",
+          },
+        ],
+      },
+    ];
     var all_actions = [];
     for (var i = 0; i < parseInt(numTimesToBoost); i++) {
       var clone = JSON.parse(JSON.stringify(action_format_one));
@@ -886,7 +887,6 @@ const Home = () => {
       all_actions.push(clone);
       all_actions.push(clone_two);
     }
-    
 
     console.log("TESTING TESTING", landToBoost);
     console.log("TESTING TESTING", amountToBoost);
@@ -894,12 +894,15 @@ const Home = () => {
     console.log("TESTING TESTING", all_actions);
 
     try {
-      const r = await transaction({actions: all_actions}, {
-        blocksBehind: 5,
-        expireSeconds: 300,
-        broadcast: true,
-        sign: true,
-      });
+      const r = await transaction(
+        { actions: all_actions },
+        {
+          blocksBehind: 5,
+          expireSeconds: 300,
+          broadcast: true,
+          sign: true,
+        }
+      );
       console.log("TESTER TESTER: ", r);
       alert("Transaction ID: " + r.transaction_id);
       setLandToBoost("");
@@ -1072,7 +1075,13 @@ const Home = () => {
   const renderLoginButton = () => {
     return (
       <div>
-        <button onClick={() => {Login()}}>Login</button>
+        <button
+          onClick={() => {
+            Login();
+          }}
+        >
+          Login Test
+        </button>
         <br />
       </div>
     );
@@ -1362,8 +1371,6 @@ const Home = () => {
       </tr>
     );
   };
-
-
 
   const renderContractInput = () => {
     return (
@@ -1747,120 +1754,125 @@ const Home = () => {
   );
 };
 
-
 class WCWWallet {
-  name = 'tempname'
-  wax = null
+  name = "tempname";
+  wax = null;
 
   constructor() {
-    const wax = new waxjs.WaxJS({ rpcEndpoint: 'https://wax.greymass.com', tryAutoLogin: false })
+    const wax = new waxjs.WaxJS({
+      rpcEndpoint: "https://wax.greymass.com",
+      tryAutoLogin: false,
+    });
     wax.rpc = new JsonRpc("https://wax.greymass.com", {
-      fetch
-    })
-    this.wax = wax
+      fetch,
+    });
+    this.wax = wax;
   }
 
   async checkLogin() {
-    const isAutoLoginAvailable = await this.wax.isAutoLoginAvailable()
-    console.log('check wax autoLogin', isAutoLoginAvailable)
+    const isAutoLoginAvailable = await this.wax.isAutoLoginAvailable();
+    console.log("check wax autoLogin", isAutoLoginAvailable);
 
     if (isAutoLoginAvailable) {
-      console.log('wcw auto logined')
-      this.name = this.wax.user.account
+      console.log("wcw auto logined");
+      this.name = this.wax.user.account;
       return {
-        chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4', 
+        chainId:
+          "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4",
         name: this.wax.user.account,
         authorization: {
-          actor: this.wax.user.account, permission: 'active'
-        }
-      }
+          actor: this.wax.user.account,
+          permission: "active",
+        },
+      };
     } else {
-      return null
+      return null;
     }
   }
 
   async login() {
-    const userAccount = await this.wax.login()
+    const userAccount = await this.wax.login();
     console.log("this.wax.user.account", this.wax.user.account);
-    this.name = this.wax.user.account
+    this.name = this.wax.user.account;
     return {
-      chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
+      chainId:
+        "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4",
       name: this.wax.user.account,
       authorization: {
-        actor: this.wax.user.account, permission: 'active'
-      }
-    }
+        actor: this.wax.user.account,
+        permission: "active",
+      },
+    };
   }
 
   async logout() {
-    this.wax = new waxjs.WaxJS({ rpcEndpoint: 'https://wax.greymass.com', tryAutoLogin: false })
-    return {}
+    this.wax = new waxjs.WaxJS({
+      rpcEndpoint: "https://wax.greymass.com",
+      tryAutoLogin: false,
+    });
+    return {};
   }
 
   async transact(packed) {
-    console.log(packed)
-    try{
-      const trans = await this.wax.api.transact(
-        packed, {
+    console.log(packed);
+    try {
+      const trans = await this.wax.api.transact(packed, {
         blocksBehind: 3,
         expireSeconds: 1200,
-      })
-      return trans
-    } catch(e){
-      
-      alert(e)
+      });
+      return trans;
+    } catch (e) {
+      alert(e);
     }
-    
   }
 
-  async fetchTable(packed){
-    try{
-      console.log(packed)
+  async fetchTable(packed) {
+    try {
+      console.log(packed);
       const response = this.wax.rpc.get_table_rows(packed);
-       return response
+      return response;
     } catch (e) {
-      console.log(e)
-      return {}
+      console.log(e);
+      return {};
     }
   }
 }
 
-const wallet = new WCWWallet
+const wallet = new WCWWallet();
 
 async function Login() {
   try {
-      const logined = await wallet.login()
-      if(logined){
-          return logined
-      }
-      return {}
-  } catch(e) {
-      console.log(e)
+    const logined = await wallet.login();
+    if (logined) {
+      return logined;
+    }
+    return {};
+  } catch (e) {
+    console.log(e);
   }
 }
 
 async function checkLogin() {
-  try{
-      const autoLogined = await wallet.checkLogin()
-      if(autoLogined != null){
-          return autoLogined
-      } 
-      return {}
-  }catch(e){
-      console.log(e)
+  try {
+    const autoLogined = await wallet.checkLogin();
+    if (autoLogined != null) {
+      return autoLogined;
+    }
+    return {};
+  } catch (e) {
+    console.log(e);
   }
 }
- 
-async function fetchTable(packed){
-  const x = await wallet.fetchTable(packed)
-  return x
+
+async function fetchTable(packed) {
+  const x = await wallet.fetchTable(packed);
+  return x;
 }
 
-export async function transaction(packed){
-await Login()
-const x = await wallet.transact(packed)
-return x
+export async function transaction(packed) {
+  await Login();
+  const x = await wallet.transact(packed);
+  return x;
 }
-
 
 export default Home;
