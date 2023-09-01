@@ -5,14 +5,15 @@ export default function About() {
         <h1 className="text-body-emphasis">About:</h1>
         <p className="lead">
           CPU4 is a new cpu renting system on the wax blockchain, created with
-          help from the WAX Dev team and community members(Vaaaan,deraXyna). It
+          help from the WAX Dev team and community members(Vaaaan, deraXyna). It
           allows anyone to rent cpu or deposit wax and earn from renting to
           others. The price is dynamically set between a 1% and 10% fee and it
-          changes everytime someone deposits/withdraws/rents/returns wax. Users
-          first send the fee then get staked the amount of wax it would pay for.
-          Users are limited to how much they can rent in a single transaction
-          but can make multiple requests as long as there is wax available.
-          There is also a free system implemented but it has limits too.
+          changes everytime someone deposits, withdraws, rents, or returns wax.
+          Users first send the fee then get staked the amount of wax it would
+          pay for. Users are limited to how much they can rent in a single
+          transaction but can make multiple requests as long as there is wax
+          available. There is also a free system implemented but it has limits
+          too.
           <br></br>
           <br></br>
           The system will be open for 1 week before allowing users to deposit
