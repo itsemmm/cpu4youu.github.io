@@ -132,7 +132,7 @@ function App() {
             const table2 = (response as any).r2;
             setCurrentBalance("0 WAX");
             for (var i = 0; i < table2["rows"].length; i++) {
-              if (table2["rows"][i].account === session.actor) {
+              if (table2["rows"][i].account === String(session.actor)) {
                 setCurrentBalance(table2["rows"][i].wax);
               }
             }
