@@ -205,7 +205,7 @@ function App() {
         .transact({ action }, { broadcast: true, expireSeconds: 300 })
         .catch((e) => {
           console.log("error caught in transact", e);
-          alert(e);
+          // alert(e);
         });
       const waxBalance = await session.client.v1.chain.get_account(
         session.actor
@@ -236,7 +236,7 @@ function App() {
         .transact({ action }, { broadcast: true, expireSeconds: 300 })
         .catch((e) => {
           console.log("error caught in transact", e);
-          alert(e);
+          // alert(e);
         });
       const waxBalance = await session.client.v1.chain.get_account(
         session.actor
@@ -265,7 +265,7 @@ function App() {
         .transact({ action }, { broadcast: true, expireSeconds: 300 })
         .catch((e) => {
           console.log("error caught in transact", e);
-          alert(e);
+          // alert(e);
         });
       const waxBalance = await session.client.v1.chain.get_account(
         session.actor
@@ -297,7 +297,7 @@ function App() {
         .transact({ action }, { broadcast: true, expireSeconds: 300 })
         .catch((e) => {
           console.log("error caught in transact", e);
-          alert(e);
+          // alert(e);
         });
       const waxBalance = await session.client.v1.chain.get_account(
         session.actor
@@ -326,7 +326,7 @@ function App() {
         .transact({ action }, { broadcast: true, expireSeconds: 300 })
         .catch((e) => {
           console.log("error caught in transact", e);
-          alert(e);
+          // alert(e);
         });
       setNumberOfDaysOptions(3);
       setAmountToBeStaked(0);
@@ -352,7 +352,7 @@ function App() {
         .transact({ action }, { broadcast: true, expireSeconds: 300 })
         .catch((e) => {
           console.log("error caught in transact", e);
-          alert(e);
+          // alert(e);
         });
       const waxBalance = await session.client.v1.chain.get_account(
         session.actor
@@ -623,7 +623,7 @@ function App() {
             <p>
               {String(session.actor)}
               <br />
-              Current Balance: {waxBalance}
+              Current Balance: {String(waxBalance)}
             </p>
             {depositedWax()}
             {renderSelectSendOption()}
